@@ -36,3 +36,10 @@ project "Functions-test"
     objdir ("tests/obj/" .. outputdir .. "/%{prj.name}")
     files { "tests/Functions.cpp" }
     links { "NN-Toolkit" } 
+
+project "ErrorHandling-test"
+    kind "ConsoleApp"
+    targetdir ("tests/bin/" .. outputdir .. "/%{prj.name}")
+    objdir ("tests/obj/" .. outputdir .. "/%{prj.name}")
+    files { "tests/ErrorHandling.cpp" }
+    links { "NN-Toolkit" } 
