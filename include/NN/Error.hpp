@@ -8,8 +8,13 @@ namespace NN {
     class BaseError : public std::runtime_error {
     public:
         BaseError();
-        BaseError(const std::string& str);
-        BaseError(const std::string& str1, const std::string& str2);
+        BaseError(const std::string& msg);
+        BaseError(const std::string& type, const std::string& msg);
+    };
+
+    class MatrixError : public BaseError {
+    public:
+        MatrixError(const std::string& msg);
     };
 
 }

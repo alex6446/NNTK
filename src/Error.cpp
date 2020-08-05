@@ -2,8 +2,11 @@
 
 namespace NN {
 
-    BaseError::BaseError() : std::runtime_error("Unknown Error") { }
-    BaseError::BaseError(const std::string& str) : std::runtime_error(str) { }
-    BaseError::BaseError(const std::string& str1, const std::string& str2) : std::runtime_error(str1 + str2) { }
+    BaseError::BaseError() : std::runtime_error("NN: Unknown Error") {}
+    BaseError::BaseError(const std::string& msg) : std::runtime_error("NN:" + msg) {}
+    BaseError::BaseError(const std::string& type, const std::string& msg) : std::runtime_error("NN:" + type + msg) {}
+
+
+    MatrixError::MatrixError(const std::string& msg) : BaseError(":MatrixError:", msg) {}
 
 }

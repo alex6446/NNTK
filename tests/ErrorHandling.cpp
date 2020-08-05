@@ -2,9 +2,9 @@
 #include <iostream>
 
 void errorChecker () {
-    //throw NN::BaseError();
+    // throw NN::BaseError();
     // throw NN::BaseError("errorChecker() error");
-    throw NN::BaseError("Test::ErrorHandling: ", "errorChecker() error");
+    throw NN::MatrixError("errorChecker() error");
 }
 
 int main () {

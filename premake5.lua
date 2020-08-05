@@ -43,3 +43,17 @@ project "ErrorHandling-test"
     objdir ("tests/obj/" .. outputdir .. "/%{prj.name}")
     files { "tests/ErrorHandling.cpp" }
     links { "NN-Toolkit" } 
+
+project "Matrix-test"
+    kind "ConsoleApp"
+    targetdir ("tests/bin/" .. outputdir .. "/%{prj.name}")
+    objdir ("tests/obj/" .. outputdir .. "/%{prj.name}")
+    files { "tests/Matrix.cpp" }
+    links { "NN-Toolkit" } 
+
+project "Perceptron-test"
+    kind "ConsoleApp"
+    targetdir ("tests/bin/" .. outputdir .. "/%{prj.name}")
+    objdir ("tests/obj/" .. outputdir .. "/%{prj.name}")
+    files { "tests/Perceptron.cpp" }
+    links { "NN-Toolkit" } 
