@@ -6,28 +6,29 @@
 
 void perceptron () {
     using namespace std;
+    using namespace NN;
 
-    NN::Matrixf training_inputs = {{0, 0, 1},
+    MX::Matrixf training_inputs = {{0, 0, 1},
                                    {1, 1, 1},
                                    {1, 0, 1},
                                    {0, 1, 1}};
                                             
-    NN::Matrixf training_outputs = NN::Matrixf({0, 1, 1, 0}).transpose();
+    MX::Matrixf training_outputs = MX::Matrixf({0, 1, 1, 0}).transpose();
 
-    NN::Matrixf synaptic_weights = NN::Matrixf(3, 1).randomize(-1, 1);
+    MX::Matrixf synaptic_weights = MX::Matrixf(3, 1).randomize(-1, 1);
 
     cout << "Случайные инициализирующие веса:" << endl;
     cout << synaptic_weights << endl;    
 
-    NN::Matrixf outputs;
-    NN::Matrixf input_layer;
+    MX::Matrixf outputs;
+    MX::Matrixf input_layer;
     // Метод обратного распространения
     for (int i = 0; i < 20000; i++) { 
         input_layer = training_inputs;
-        outputs = input_layer.dot(synaptic_weights).apply(NN::Activation::Sigmoid, 0);
+        outputs = MX::Dot(input_layer, synaptic_weights).apply(NN::Activation::Sigmoid, 0);
 
-        NN::Matrixf err = training_outputs - outputs;
-        NN::Matrixf adjustments = input_layer.transpose().dot(err * (outputs * (1 - outputs)));
+        MX::Matrixf err = training_outputs - outputs;
+        MX::Matrixf adjustments = MX::Dot(input_layer.transpose(), err * (outputs * (1 - outputs)));
 
         synaptic_weights += adjustments;
     }
@@ -39,8 +40,8 @@ void perceptron () {
     cout << outputs << endl;
 
     // TEST
-    NN::Matrixf new_inputs = {1, 1, 0};
-    NN::Matrixf output = new_inputs.dot(synaptic_weights).apply(NN::Activation::Sigmoid, 0);
+    MX::Matrixf new_inputs = {1, 1, 0};
+    MX::Matrixf output = MX::Dot(new_inputs, synaptic_weights).apply(NN::Activation::Sigmoid, 0);
 
     cout << "Новая ситуация: " << endl;
     cout << output << endl;
