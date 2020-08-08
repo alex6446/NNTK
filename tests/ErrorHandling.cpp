@@ -1,10 +1,11 @@
-#include <NN/Error.hpp>
 #include <iostream>
 
+#include "NN/Error.hpp"
+
 void errorChecker () {
-    // throw NN::BaseError();
-    // throw NN::BaseError("errorChecker() error");
-    throw NN::MatrixError("errorChecker() error");
+    // throw NN::Error::Base();
+    // throw NN::Error::Base(":errorChecker: program failed successfully");
+    throw NN::Error::Matrix(":errorChecker: program failed successfully");
 }
 
 int main () {

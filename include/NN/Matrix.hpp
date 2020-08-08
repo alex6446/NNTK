@@ -129,7 +129,7 @@ namespace NN {
 
             friend Matrix operator+ (T a, const Matrix& B) {
                 if (!B.arr)
-                    throw MatrixError(":operator+: matrix not initialized");
+                    throw Error::Matrix(":operator+: matrix not initialized");
                 Matrix C = B;
                 for (int i = 0; i < C.m; ++i)
                     for (int j = 0; j < C.n; ++j)
@@ -139,7 +139,7 @@ namespace NN {
 
             friend Matrix operator- (T a, const Matrix& B) {
                 if (!B.arr)
-                    throw MatrixError(":operator-: matrix not initialized");
+                    throw Error::Matrix(":operator-: matrix not initialized");
                 Matrix C = B;
                 for (int i = 0; i < C.m; ++i)
                     for (int j = 0; j < C.n; ++j)
@@ -149,7 +149,7 @@ namespace NN {
 
             friend Matrix operator* (T a, const Matrix& B) {
                 if (!B.arr)
-                    throw MatrixError(":operator*: matrix not initialized");
+                    throw Error::Matrix(":operator*: matrix not initialized");
                 Matrix C = B;
                 for (int i = 0; i < C.m; ++i)
                     for (int j = 0; j < C.n; ++j)
@@ -159,12 +159,12 @@ namespace NN {
 
             friend Matrix operator/ (T a, const Matrix& B) {
                 if (!B.arr)
-                    throw MatrixError(":operator/: matrix not initialized");
+                    throw Error::Matrix(":operator/: matrix not initialized");
                 Matrix C = B;
                 for (int i = 0; i < C.m; ++i)
                     for (int j = 0; j < C.n; ++j) {
                         if (!C.arr[i][j])
-                            throw MatrixError(":operator/: division by zero");
+                            throw Error::Matrix(":operator/: division by zero");
                         C.arr[i][j] = a / C.arr[i][j];
                     }
                 return C;
@@ -189,7 +189,7 @@ namespace NN {
         Matrix<T>::Matrix(int r, int c)
         : m(r), n(c), arr(nullptr) {
             if (m <= 0 || n <= 0)
-                throw MatrixError(":Matrix: incorrect dimensions");
+                throw Error::Matrix(":Matrix: incorrect dimensions");
             Create();
         }
 
@@ -197,9 +197,9 @@ namespace NN {
         Matrix<T>::Matrix (int r, int c, T* a) 
         : m(r), n(c), arr(nullptr) {
             if (m <= 0 || n <= 0)
-                throw MatrixError(":Matrix: incorrect dimensions");
+                throw Error::Matrix(":Matrix: incorrect dimensions");
             if (!a)
-                throw MatrixError(":Matrix: can't copy from a null array");
+                throw Error::Matrix(":Matrix: can't copy from a null array");
             Create(a);
         }
         
@@ -207,9 +207,9 @@ namespace NN {
         Matrix<T>::Matrix (int r, int c, T** a) 
         : m(r), n(c), arr(nullptr) {
             if (m <= 0 || n <= 0)
-                throw MatrixError(":Matrix: incorrect dimensions");
+                throw Error::Matrix(":Matrix: incorrect dimensions");
             if (!a)
-                throw MatrixError(":Matrix: can't copy from a null array");
+                throw Error::Matrix(":Matrix: can't copy from a null array");
             Create(a);
         }
 
@@ -225,7 +225,7 @@ namespace NN {
             Create();
             for (int i = 0; i < m; ++i) {
                 if ((l.begin()+i)->size() != n)
-                    throw MatrixError(":Matrix: incorrect initializer list");
+                    throw Error::Matrix(":Matrix: incorrect initializer list");
                 for (int j = 0; j < n; ++j)
                     arr[i][j] = *((l.begin()+i)->begin()+j);
             }
@@ -303,7 +303,7 @@ namespace NN {
             }
             for (int i = 0; i < m; ++i) {
                 if ((l.begin()+i)->size() != n)
-                    throw MatrixError(":Matrix: incorrect initializer list");
+                    throw Error::Matrix(":Matrix: incorrect initializer list");
                 for (int j = 0; j < n; ++j)
                     arr[i][j] = *((l.begin()+i)->begin()+j);
             }
@@ -313,9 +313,9 @@ namespace NN {
         template <class T>
         Matrix<T>& Matrix<T>::fit (const Matrix& B) {
             if (!arr)
-                throw MatrixError(":fit: matrix not initialized");
+                throw Error::Matrix(":fit: matrix not initialized");
             if (B.m * B.n != m * n)
-                throw MatrixError(":fit: sizes not match");
+                throw Error::Matrix(":fit: sizes not match");
             if (B.m == m && B.n == n) {
                 for (int i = 0; i < m; ++i)
                     for (int j = 0; j < n; ++j)
@@ -338,7 +338,7 @@ namespace NN {
         template <class T>
         Matrix<T>& Matrix<T>::randomize (int a, int b) {
             if (!arr)
-                throw MatrixError(":randomize: matrix not initialized");
+                throw Error::Matrix(":randomize: matrix not initialized");
             for (int i = 0; i < m; ++i)
                 for (int j = 0; j < n; ++j)
                     arr[i][j] = (rand()%(b-a)) + a + (T)rand()/RAND_MAX;
@@ -348,7 +348,7 @@ namespace NN {
         template <class T>
         Matrix<T> Matrix<T>::flatten (int axis) const {
             if (!arr)
-                throw MatrixError(":flatten: matrix not initialized");
+                throw Error::Matrix(":flatten: matrix not initialized");
             if ((axis == 0 && m == 1) || (axis == 1 && n == 1))
                 return *this;
             Matrix C;
@@ -370,11 +370,11 @@ namespace NN {
         template <class T>
         Matrix<T> Matrix<T>::reshape (int r, int c) const {
             if (!arr)
-                throw MatrixError(":reshape: matrix not initialized");
+                throw Error::Matrix(":reshape: matrix not initialized");
             if (r <= 0 || c <= 0)
-                throw MatrixError(":reshape: incorrect dimensions");
+                throw Error::Matrix(":reshape: incorrect dimensions");
             if (m * n != r * c)
-                throw MatrixError(":reshape: sizes not match");
+                throw Error::Matrix(":reshape: sizes not match");
             if (r == m && c == n) 
                 return *this;
             Matrix C(r, c);
@@ -394,7 +394,7 @@ namespace NN {
         template <class T>
         Matrix<T> Matrix<T>::transpose () const {
             if (!arr)
-                throw MatrixError(":transpose: matrix not initialized");
+                throw Error::Matrix(":transpose: matrix not initialized");
             Matrix C(n, m);
             for (int i = 0; i < m; ++i)
                 for (int j = 0; j < n; ++j)
@@ -405,9 +405,9 @@ namespace NN {
         template <class T>
         Matrix<T> Matrix<T>::apply (T (*func) (T)) const {
             if (!arr)
-                throw MatrixError(":apply: matrix not initialized");
+                throw Error::Matrix(":apply: matrix not initialized");
             if (!func)
-                throw MatrixError(":apply: cannot apply null function");
+                throw Error::Matrix(":apply: cannot apply null function");
             Matrix C = *this;
             for (int i = 0; i < m; ++i)
                 for (int j = 0; j < n; ++j)
@@ -418,9 +418,9 @@ namespace NN {
         template <class T>
         Matrix<T> Matrix<T>::apply (T (*func) (T, int), int a) const {
             if (!arr)
-                throw MatrixError(":apply: matrix not initialized");
+                throw Error::Matrix(":apply: matrix not initialized");
             if (!func)
-                throw MatrixError(":apply: cannot apply null function");
+                throw Error::Matrix(":apply: cannot apply null function");
             Matrix C = *this;
             for (int i = 0; i < m; ++i)
                 for (int j = 0; j < n; ++j)
@@ -431,29 +431,29 @@ namespace NN {
         template <class T>
         T& Matrix<T>::operator() (int i, int j) {
             if (!arr)
-                throw MatrixError(":operator(): matrix not initialized");
+                throw Error::Matrix(":operator(): matrix not initialized");
             if (i < 0 || j < 0)
-                throw MatrixError(":operator(): negative index");
+                throw Error::Matrix(":operator(): negative index");
             if (i >= m || j >= n)
-                throw MatrixError(":operator(): index out of bounds");
+                throw Error::Matrix(":operator(): index out of bounds");
             return arr[i][j];
         }
 
         template <class T>
         T const& Matrix<T>::operator() (int i, int j) const {
             if (!arr)
-                throw MatrixError(":operator(): matrix not initialized");
+                throw Error::Matrix(":operator(): matrix not initialized");
             if (i < 0 || j < 0)
-                throw MatrixError(":operator(): negative index");
+                throw Error::Matrix(":operator(): negative index");
             if (i >= m || j >= n)
-                throw MatrixError(":operator(): index out of bounds");
+                throw Error::Matrix(":operator(): index out of bounds");
             return arr[i][j];
         }
 
         template <class T>
         bool Matrix<T>::operator== (const Matrix<T>& B) const {
             if (!arr || !B.arr)
-                throw MatrixError(":operator==: matrix not initialized");
+                throw Error::Matrix(":operator==: matrix not initialized");
             if (m != B.m || n != B.n)
                 return false;
             for (int i = 0; i < m; ++i)
@@ -466,14 +466,14 @@ namespace NN {
         template <class T>
         bool Matrix<T>::operator!= (const Matrix<T>& B) const {
             if (!arr || !B.arr)
-                throw MatrixError(":operator!=: matrix not initialized");
+                throw Error::Matrix(":operator!=: matrix not initialized");
             return !operator==(B);
         }
 
         template <class T>
         Matrix<T> Matrix<T>::operator+ (const T b) const {
             if (!arr)
-                throw MatrixError(":operator+: matrix not initialized");
+                throw Error::Matrix(":operator+: matrix not initialized");
             Matrix C = *this;
             for (int i = 0; i < m; ++i)
                 for (int j = 0; j < n; ++j)
@@ -484,7 +484,7 @@ namespace NN {
         template <class T>
         Matrix<T> Matrix<T>::operator- (const T b) const {
             if (!arr)
-                throw MatrixError(":operator-: matrix not initialized");
+                throw Error::Matrix(":operator-: matrix not initialized");
             Matrix C = *this;
             for (int i = 0; i < m; ++i)
                 for (int j = 0; j < n; ++j)
@@ -495,7 +495,7 @@ namespace NN {
         template <class T>
         Matrix<T> Matrix<T>::operator* (const T b) const {
             if (!arr)
-                throw MatrixError(":operator*: matrix not initialized");
+                throw Error::Matrix(":operator*: matrix not initialized");
             Matrix C = *this;
             for (int i = 0; i < m; ++i)
                 for (int j = 0; j < n; ++j)
@@ -506,9 +506,9 @@ namespace NN {
         template <class T>
         Matrix<T> Matrix<T>::operator/ (const T b) const {
             if (!arr)
-                throw MatrixError(":operator/: matrix not initialized");
+                throw Error::Matrix(":operator/: matrix not initialized");
             if (!b)
-                throw MatrixError(":operator/: division by zero");
+                throw Error::Matrix(":operator/: division by zero");
             Matrix C = *this;
             for (int i = 0; i < m; ++i)
                 for (int j = 0; j < n; ++j)
@@ -519,9 +519,9 @@ namespace NN {
         template <class T>
         Matrix<T> Matrix<T>::operator+ (const Matrix& B) const {
             if (!arr || !B.arr)
-                throw MatrixError(":operator+: matrix not initialized");
+                throw Error::Matrix(":operator+: matrix not initialized");
             if (m != B.m || n != B.n)
-                throw MatrixError(":operator+: dimentions not match");
+                throw Error::Matrix(":operator+: dimentions not match");
             Matrix C = *this;
             for (int i = 0; i < m; ++i)
                 for (int j = 0; j < n; ++j)
@@ -532,9 +532,9 @@ namespace NN {
         template <class T>
         Matrix<T> Matrix<T>::operator- (const Matrix& B) const {
             if (!arr || !B.arr)
-                throw MatrixError(":operator-: matrix not initialized");
+                throw Error::Matrix(":operator-: matrix not initialized");
             if (m != B.m || n != B.n)
-                throw MatrixError(":operator-: dimentions not match");
+                throw Error::Matrix(":operator-: dimentions not match");
             Matrix C = *this;
             for (int i = 0; i < m; ++i)
                 for (int j = 0; j < n; ++j)
@@ -545,9 +545,9 @@ namespace NN {
         template <class T>
         Matrix<T> Matrix<T>::operator* (const Matrix& B) const {
             if (!arr || !B.arr)
-                throw MatrixError(":operator*: matrix not initialized");
+                throw Error::Matrix(":operator*: matrix not initialized");
             if (m != B.m || n != B.n)
-                throw MatrixError(":operator*: dimentions not match");
+                throw Error::Matrix(":operator*: dimentions not match");
             Matrix C = *this;
             for (int i = 0; i < m; ++i)
                 for (int j = 0; j < n; ++j)
@@ -558,14 +558,14 @@ namespace NN {
         template <class T>
         Matrix<T> Matrix<T>::operator/ (const Matrix& B) const {
             if (!arr || !B.arr)
-                throw MatrixError(":operator/: matrix not initialized");
+                throw Error::Matrix(":operator/: matrix not initialized");
             if (m != B.m || n != B.n)
-                throw MatrixError(":operator/: dimentions not match");
+                throw Error::Matrix(":operator/: dimentions not match");
             Matrix C = *this;
             for (int i = 0; i < m; ++i) 
                 for (int j = 0; j < n; ++j) {
                     if (!B.arr[i][j])
-                        throw MatrixError(":operator/: division by zero"); 
+                        throw Error::Matrix(":operator/: division by zero"); 
                     C.arr[i][j] /= B.arr[i][j];
                 }
             return C;
@@ -574,14 +574,14 @@ namespace NN {
         template <class T>
         Matrix<T> Matrix<T>::operator- () const {
             if (!arr)
-                throw MatrixError(":operator-: matrix not initialized");
+                throw Error::Matrix(":operator-: matrix not initialized");
             return (*this) * -1;
         }
 
         template <class T>
         Matrix<T>& Matrix<T>::operator+= (const T b) {
             if (!arr)
-                throw MatrixError(":operator+=: matrix not initialized");
+                throw Error::Matrix(":operator+=: matrix not initialized");
             for (int i = 0; i < m; ++i)
                 for (int j = 0; j < n; ++j)
                     arr[i][j] += b;
@@ -591,7 +591,7 @@ namespace NN {
         template <class T>
         Matrix<T>& Matrix<T>::operator-= (const T b) {
             if (!arr)
-                throw MatrixError(":operator-=: matrix not initialized");
+                throw Error::Matrix(":operator-=: matrix not initialized");
             for (int i = 0; i < m; ++i)
                 for (int j = 0; j < n; ++j)
                     arr[i][j] -= b;
@@ -601,7 +601,7 @@ namespace NN {
         template <class T>
         Matrix<T>& Matrix<T>::operator*= (const T b) {
             if (!arr)
-                throw MatrixError(":operator*=: matrix not initialized");
+                throw Error::Matrix(":operator*=: matrix not initialized");
             for (int i = 0; i < m; ++i)
                 for (int j = 0; j < n; ++j)
                     arr[i][j] *= b;
@@ -611,9 +611,9 @@ namespace NN {
         template <class T>
         Matrix<T>& Matrix<T>::operator/= (const T b) {
             if (!arr)
-                throw MatrixError(":operator/=: matrix not initialized");
+                throw Error::Matrix(":operator/=: matrix not initialized");
             if (!b)
-                throw MatrixError(":operator/=: division by zero");
+                throw Error::Matrix(":operator/=: division by zero");
             for (int i = 0; i < m; ++i)
                 for (int j = 0; j < n; ++j)
                     arr[i][j] /= b;
@@ -623,9 +623,9 @@ namespace NN {
         template <class T>
         Matrix<T>& Matrix<T>::operator+= (const Matrix& B) {
             if (!arr || !B.arr)
-                throw MatrixError(":operator+=: matrix not initialized");
+                throw Error::Matrix(":operator+=: matrix not initialized");
             if (m != B.m || n != B.n)
-                throw MatrixError(":operator+=: dimentions not match");
+                throw Error::Matrix(":operator+=: dimentions not match");
             for (int i = 0; i < m; ++i)
                 for (int j = 0; j < n; ++j)
                     arr[i][j] += B.arr[i][j];
@@ -635,9 +635,9 @@ namespace NN {
         template <class T>
         Matrix<T>& Matrix<T>::operator-= (const Matrix& B) {
             if (!arr || !B.arr)
-                throw MatrixError(":operator-=: matrix not initialized");
+                throw Error::Matrix(":operator-=: matrix not initialized");
             if (m != B.m || n != B.n)
-                throw MatrixError(":operator-=: dimentions not match");
+                throw Error::Matrix(":operator-=: dimentions not match");
             for (int i = 0; i < m; ++i)
                 for (int j = 0; j < n; ++j)
                     arr[i][j] -= B.arr[i][j];
@@ -647,9 +647,9 @@ namespace NN {
         template <class T>
         Matrix<T>& Matrix<T>::operator*= (const Matrix& B) {
             if (!arr || !B.arr)
-                throw MatrixError(":operator*=: matrix not initialized");
+                throw Error::Matrix(":operator*=: matrix not initialized");
             if (m != B.m || n != B.n)
-                throw MatrixError(":operator*=: dimentions not match");
+                throw Error::Matrix(":operator*=: dimentions not match");
             for (int i = 0; i < m; ++i)
                 for (int j = 0; j < n; ++j)
                     arr[i][j] *= B.arr[i][j];
@@ -659,13 +659,13 @@ namespace NN {
         template <class T>
         Matrix<T>& Matrix<T>::operator/= (const Matrix& B) {
             if (!arr || !B.arr)
-                throw MatrixError(":operator/=: matrix not initialized");
+                throw Error::Matrix(":operator/=: matrix not initialized");
             if (m != B.m || n != B.n)
-                throw MatrixError(":operator/=: dimentions not match");
+                throw Error::Matrix(":operator/=: dimentions not match");
             for (int i = 0; i < m; ++i)
                 for (int j = 0; j < n; ++j) {
                     if (!B.arr[i][j])
-                        throw MatrixError(":operator/=: division by zero");
+                        throw Error::Matrix(":operator/=: division by zero");
                     arr[i][j] /= B.arr[i][j];
                 }
             return *this;
@@ -674,7 +674,7 @@ namespace NN {
         template <class T>
         void Matrix<T>::Create () {
             if (m <= 0 || n <= 0)
-                throw MatrixError(":Create: incorrect dimensions");
+                throw Error::Matrix(":Create: incorrect dimensions");
             arr = new T*[m];
             for (int i = 0; i < m; ++i)
                 arr[i] = new T[n] {0};
@@ -683,9 +683,9 @@ namespace NN {
         template <class T>
         void Matrix<T>::Create (T* a) {
             if (m <= 0 || n <= 0)
-                throw MatrixError(":Create: incorrect dimensions");
+                throw Error::Matrix(":Create: incorrect dimensions");
             if (!a)
-                throw MatrixError(":Create: can't copy from a null array");
+                throw Error::Matrix(":Create: can't copy from a null array");
             arr = new T*[m];
             for (int i = 0, index = 0; i < m; ++i) {
                 arr[i] = new T[n];
@@ -697,9 +697,9 @@ namespace NN {
         template <class T>
         void Matrix<T>::Create (const T* a) {
             if (m <= 0 || n <= 0)
-                throw MatrixError(":Create: incorrect dimensions");
+                throw Error::Matrix(":Create: incorrect dimensions");
             if (!a)
-                throw MatrixError(":Create: can't copy from a null array");
+                throw Error::Matrix(":Create: can't copy from a null array");
             arr = new T*[m];
             for (int i = 0, index = 0; i < m; ++i) {
                 arr[i] = new T[n];
@@ -711,9 +711,9 @@ namespace NN {
         template <class T>
         void Matrix<T>::Create (T** a) {
             if (m <= 0 || n <= 0)
-                throw MatrixError(":Create: incorrect dimensions");
+                throw Error::Matrix(":Create: incorrect dimensions");
             if (!a)
-                throw MatrixError(":Create: can't copy from a null array");
+                throw Error::Matrix(":Create: can't copy from a null array");
             arr = new T*[m];
             for (int i = 0; i < m; ++i) {
                 arr[i] = new T[n];
@@ -725,9 +725,9 @@ namespace NN {
         template <class T>
         void Matrix<T>::Create (const T** a) {
             if (m <= 0 || n <= 0)
-                throw MatrixError(":Create: incorrect dimensions");
+                throw Error::Matrix(":Create: incorrect dimensions");
             if (!a)
-                throw MatrixError(":Create: can't copy from a null array");
+                throw Error::Matrix(":Create: can't copy from a null array");
             arr = new T*[m];
             for (int i = 0; i < m; ++i) {
                 arr[i] = new T[n];
@@ -753,9 +753,9 @@ namespace NN {
         template <class T>
         Matrix<T> Dot (const Matrix<T>& A, const Matrix<T>& B) {
             if (!A.arr || !B.arr)
-                throw MatrixError(":Dot: matrix not initialized");
+                throw Error::Matrix(":Dot: matrix not initialized");
             if (A.n != B.m)
-                throw MatrixError(":Dot: multiplication conditions not met");
+                throw Error::Matrix(":Dot: multiplication conditions not met");
             Matrix<T> C(A.m, B.n);
             for (int i = 0; i < A.m; ++i)
                 for (int j = 0; j < B.n; ++j)
@@ -767,7 +767,7 @@ namespace NN {
         template <class T>
         T Sum (const Matrix<T>& A) {
             if (!A.arr)
-                throw MatrixError(":Sum: matrix not initialized");
+                throw Error::Matrix(":Sum: matrix not initialized");
             T sum = A.arr[0][0];
             for (int i = 0; i < A.m; ++i)
                 for (int j = 0; j < A.n; ++j)

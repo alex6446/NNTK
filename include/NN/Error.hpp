@@ -5,16 +5,20 @@
 
 namespace NN {
 
-    class BaseError : public std::runtime_error {
-    public:
-        BaseError();
-        BaseError(const std::string& msg);
-        BaseError(const std::string& type, const std::string& msg);
-    };
+    namespace Error {
 
-    class MatrixError : public BaseError {
-    public:
-        MatrixError(const std::string& msg);
-    };
+        class Base : public std::runtime_error {
+        public:
+            Base();
+            Base(const std::string& msg);
+            Base(const std::string& type, const std::string& msg);
+        };
+
+        class Matrix : public Base {
+        public:
+            Matrix(const std::string& msg);
+        };
+
+    }
 
 }
