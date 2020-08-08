@@ -62,7 +62,7 @@ namespace NN {
             Matrix reshape (int r, int c) const;
             Matrix transpose () const;
             Matrix apply (T (*func) (T)) const;
-            Matrix apply (T (*func) (T, int), int a) const;
+            Matrix apply (T (*func) (T, int, float), int mode, float hp = 1) const;
 
             // Accessors
             T& operator() (int i, int j);
@@ -118,8 +118,11 @@ namespace NN {
             friend std::ostream& operator<< (std::ostream& os, const Matrix& A) {
                 os << "{ { ";
                 for (int i = 0; i < A.m; ++i) {
-                    for (int j = 0; j < A.n; ++j) 
-                        os << A.arr[i][j] << ", ";
+                    for (int j = 0; j < A.n; ++j) {
+                        os << A.arr[i][j];
+                        if (j != A.n-1) os << ",";
+                        os << " ";
+                    }
                     if (i != A.m-1)
                         os << "}, " << std::endl << "  { ";
                 }
@@ -416,7 +419,7 @@ namespace NN {
         }
 
         template <class T>
-        Matrix<T> Matrix<T>::apply (T (*func) (T, int), int a) const {
+        Matrix<T> Matrix<T>::apply (T (*func) (T, int, float), int mode, float hp) const {
             if (!arr)
                 throw Error::Matrix(":apply: matrix not initialized");
             if (!func)
@@ -424,7 +427,7 @@ namespace NN {
             Matrix C = *this;
             for (int i = 0; i < m; ++i)
                 for (int j = 0; j < n; ++j)
-                    C.arr[i][j] = func(C.arr[i][j], a);
+                    C.arr[i][j] = func(C.arr[i][j], mode, hp);
             return C;
         }
 

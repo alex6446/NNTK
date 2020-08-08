@@ -57,3 +57,10 @@ project "Perceptron-test"
     objdir ("tests/obj/" .. outputdir .. "/%{prj.name}")
     files { "tests/Perceptron.cpp" }
     links { "NN-Toolkit" } 
+
+project "MultilayerPerceptron-test"
+    kind "ConsoleApp"
+    targetdir ("tests/bin/" .. outputdir .. "/%{prj.name}")
+    objdir ("tests/obj/" .. outputdir .. "/%{prj.name}")
+    files { "tests/MultilayerPerceptron.cpp" }
+    links { "NN-Toolkit" } 
