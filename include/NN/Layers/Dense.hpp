@@ -21,7 +21,7 @@ namespace NN {
             MX::Matrixf dZ;
             MX::Matrixf dA;
 
-            MX::Matrixf* X;
+            const MX::Matrixf* X;
 
             // number of neurons
             int size;
@@ -41,13 +41,13 @@ namespace NN {
                 float hyperparameter = 1
             );
 
-            void forwardProp (const MX::Matrixf& X) override;
-            void backProp (const MX::Matrixf& gradient) override;
+            void forwardProp (const void* X) override;
+            void backProp (const void* gradient) override;
             void update (float learning_rate) override;
-            virtual void bind (const std::vector<int>& dimensions) override;
+            void bind (const std::vector<int>& dimensions) override;
 
-            inline MX::Matrixf const& getA () const override { return A; }
-            inline MX::Matrixf getGradient () const override { return MX::Dot(W.transpose(), dZ); }
+            inline const void* getA () const override { return &A; }
+            inline const void* getGradient () const override { return new MX::Matrixf(MX::Dot(W.transpose(), dZ)); }
             inline std::vector<int> getDimensions () const override { return { size }; }
         };
 

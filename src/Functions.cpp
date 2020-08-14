@@ -4,17 +4,19 @@ namespace NN {
 
     namespace Loss {
 
-        template <>
-        MX::Matrixf MSE<MX::Matrixf> (const MX::Matrixf& A, const MX::Matrixf& Y, int mode, float hp) {
+        const void* MSE (const MX::Matrixf& A, const MX::Matrixf& Y, int mode, float hp) {
+            MX::Matrixf* loss = new MX::Matrixf;
             switch (mode) {
-                case 0: {
-                    MX::Matrixf loss(1, A.cols());
-                    loss = MX::Sum((A - Y) * (A - Y), 0);
-                    return loss /= A.rows();
-                }
-                case 1: return 2 * (A - Y) / A.rows();
+                case 0:
+                    *loss = MX::Sum((A - Y) * (A - Y), 0);
+                    *loss /= A.rows();
+                    break;
+                case 1: 
+                    *loss =  2 * (A - Y) / A.rows();
+                    break;
                 default: abort();
             }
+            return loss;
         }
 
     }

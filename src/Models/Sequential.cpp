@@ -15,7 +15,7 @@ namespace NN {
     void Sequential::fit (
         const MX::Matrixf& X, 
         const MX::Matrixf& Y,
-        MX::Matrixf (*l) (const MX::Matrixf&, const MX::Matrixf&, int, float),
+        const void* (*l) (const MX::Matrixf&, const MX::Matrixf&, int, float),
         int batch_size,
         int epochs,
         float learning_rate,
@@ -40,12 +40,12 @@ namespace NN {
                 }
             }
             // forward propagation
-            L[0]->forwardProp(bX);
+            L[0]->forwardProp(&bX);
             for (int i = 1; i < L.size(); ++i)
                 L[i]->forwardProp(L[i-1]->getA());
             
             // back propagation
-            L[L.size()-1]->backProp(l(L[L.size()-1]->getA(), bY, 1, hyperparameter));
+            L[L.size()-1]->backProp(l(*((const MX::Matrixf*)L[L.size()-1]->getA()), bY, 1, hyperparameter));
             for (int i = L.size()-2; i >= 0; --i)
                 L[i]->backProp(L[i+1]->getGradient());
 
@@ -63,10 +63,10 @@ namespace NN {
 
     MX::Matrixf Sequential::predict (const MX::Matrixf& X) {
         // forward propagation
-        L[0]->forwardProp(X);
+        L[0]->forwardProp(&X);
         for (int i = 1; i < L.size(); ++i)
             L[i]->forwardProp(L[i-1]->getA());
-        return L[L.size()-1]->getA();
+        return *((MX::Matrixf*)(L[L.size()-1]->getA()));
     }
 
 }

@@ -21,7 +21,7 @@ namespace NN {
         void fit (
             const MX::Matrixf& X, 
             const MX::Matrixf& Y,
-            MX::Matrixf (*l) (const MX::Matrixf&, const MX::Matrixf&, int, float), // activation function
+            const void* (*l) (const MX::Matrixf&, const MX::Matrixf&, int, float), // activation function
             int batch_size = 1,
             int epochs = 2000,
             float learning_rate = 0.5,

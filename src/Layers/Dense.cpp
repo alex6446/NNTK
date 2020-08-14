@@ -21,9 +21,9 @@ namespace NN {
                 b = MX::Matrixf(size, 1).randomize(rand_a, rand_b);
         }
 
-        void Dense::forwardProp (const MX::Matrixf& X) {
-            this->X = (MX::Matrixf*)&X;
-            Z = MX::Dot(W, X);
+        void Dense::forwardProp (const void* X) {
+            this->X = (MX::Matrixf*)X;
+            Z = MX::Dot(W, *(this->X));
             if (bias) {
                 for (int i = 0; i < Z.rows(); ++i)
                     for (int j = 0; j < Z.cols(); ++j)
@@ -34,10 +34,11 @@ namespace NN {
             else A = Z;
         }
 
-        void Dense::backProp (const MX::Matrixf& gradient) {
-            dZ = gradient;
+        void Dense::backProp (const void* gradient) {
+            dZ = *((MX::Matrixf*)gradient);
+            delete (MX::Matrixf*)gradient;
             if (g) dZ *= Z.apply(g, 1, hp);
-            float k = 1.f / gradient.cols();
+            float k = 1.f / dZ.cols();
             dW = k * MX::Dot(dZ, X->transpose());
             if (bias) db = k * MX::Sum(dZ, 1);
         }
@@ -51,7 +52,6 @@ namespace NN {
         void Dense::bind (const std::vector<int>& dimensions) {
             W = MX::Matrixf(size, dimensions[0]).randomize(rand_a, rand_b);
         }
-
 
     } // namespace Layer
 
