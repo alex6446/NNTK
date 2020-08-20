@@ -20,7 +20,8 @@ namespace NN {
         T Sum (const Matrix<T>& A);
         template <class T>
         Matrix<T> Sum (const Matrix<T>& A, int axis);
-
+        template <class T>
+        Matrix<T> Convolve (const Matrix<T>& A, const Matrix<T>& kernel, int padding=0, int stride=0);
     }
 
     // Matrix interface
@@ -67,6 +68,7 @@ namespace NN {
             // Accessors
             T& operator() (int i, int j);
             T const& operator() (int i, int j) const;
+            T get (int i, int j, T a=0) const;
             inline int rows() const { return m; }
             inline int cols() const { return n; }
             inline int elements() const { return m * n; }
@@ -114,6 +116,7 @@ namespace NN {
             friend Matrix Dot <> (const Matrix& A, const Matrix& B);
             friend T Sum <> (const Matrix& A);
             friend Matrix Sum <> (const Matrix& A, int axis);
+            friend Matrix Convolve <> (const Matrix& A, const Matrix& kernel, int padding, int stride);
 
             friend std::ostream& operator<< (std::ostream& os, const Matrix& A) {
                 os << "{ { ";
@@ -450,6 +453,14 @@ namespace NN {
                 throw Error::Matrix(":operator(): negative index");
             if (i >= m || j >= n)
                 throw Error::Matrix(":operator(): index out of bounds");
+            return arr[i][j];
+        }
+
+        template <class T>
+        T Matrix<T>::get (int i, int j, T a) const {
+            if (!arr) return a;
+            if (i < 0 || j < 0) return a;
+            if (i >= m || j >= n) return a;
             return arr[i][j];
         }
 
@@ -794,6 +805,27 @@ namespace NN {
                         sum.arr[i][0] += A.arr[i][j];
             }
             return sum;
+        }
+
+        template <class T>
+        Matrix<T> Convolve (const Matrix<T>& A, const Matrix<T>& kernel, int padding, int stride) {
+            if (!A.arr || !kernel.arr)
+                throw Error::Matrix(":Convolve: matrix not initialized");
+            if (padding < 0)
+                throw Error::Matrix(":Convolve: negative padding");
+            if (stride < 1)
+                throw Error::Matrix(":Convolve: stride is less than one");
+            int cm = (A.m + 2*padding - kernel.m) / stride + 1;
+            int cn = (A.n + 2*padding - kernel.n) / stride + 1;
+            if (cm <= 0 || cn <= 0)
+                throw Error::Matrix(":Convolve: kernel too large");
+            Matrix<T> C(cm, cn);
+            for (int ai = -padding, ci = 0; ci < C.m; ai+=stride, ++ci)
+                for (int aj = -padding, cj = 0; cj < C.n; aj+=stride, ++cj) 
+                    for (int ki = 0; ki < kernel.m; ++ki)
+                        for (int kj = 0; kj < kernel.n; ++kj)
+                            C.arr[ci][cj] += kernel.arr[ki][kj] * A.get(ai+ki, aj+kj);
+            return C;
         }
 
     } // namespace MX

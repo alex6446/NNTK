@@ -57,6 +57,26 @@ void functions () {
     cout << "Sum(D)\n" << MX::Sum(D) << endl;
     cout << "Sum(D, 0)\n" << MX::Sum(D, 0) << endl;
     cout << "Sum(D, 1)\n" << MX::Sum(D, 1) << endl;
+    MX::Matrixi E = {
+        {2, 3, 7, 4, 6, 2, 9, 1},
+        {6, 6, 9, 8, 7, 4, 3, 1},
+        {3, 4, 8, 3, 8, 9, 7, 1},
+        {7, 8, 3, 6, 6, 3, 4, 1},
+        {4, 2, 1, 8, 3, 4, 6, 1},
+        {3, 2, 4, 1, 9, 8, 3, 1},
+        {0, 1, 3, 9, 2, 1, 4, 1}
+    };
+    MX::Matrixi F = {
+        {3, 4, 4},
+        {1, 0, 2},
+        {-1, 0, 3}
+    };
+    cout << "Convolve(E, F, 2, 3)\n" << MX::Convolve(E, F, 2, 3) << endl;
+    /* Answer: { 
+        { 6, 9, 21, -1 }, 
+        { 51, 106, 77, 3 }, 
+        { 22, 72, 74, 3 } 
+    } */
 }
 
 void accessors () {
@@ -64,6 +84,7 @@ void accessors () {
     MX::Matrixf A = MX::Matrixf(4, 6).randomize(-1, 1);
     cout << "A\n" << A << endl;
     cout << "A(2, 3)\n" << A(2, 3) << endl;
+    cout << "A.get(2, 8)\n" << A.get(2, 8) << endl;
     cout << "A.rows()\n" << A.rows() << endl;
     cout << "A.cols()\n" << A.cols() << endl;
     cout << "A.elements()\n" << A.elements() << endl;
@@ -121,9 +142,9 @@ int main () {
 
     constructors();
     assignment();
-    functions();
     accessors();
     operators();
+    functions();
 
     cout << endl << "FINISH MATRIX TESTS ......................................" << endl << endl;
 
