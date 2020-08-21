@@ -62,6 +62,7 @@ namespace NN {
             Matrix flatten (int axis=0) const;
             Matrix reshape (int r, int c) const;
             Matrix transpose () const;
+            Matrix rotate180 () const;
             Matrix apply (T (*func) (T)) const;
             Matrix apply (T (*func) (T, int, float), int mode, float hp = 1) const;
 
@@ -405,6 +406,17 @@ namespace NN {
             for (int i = 0; i < m; ++i)
                 for (int j = 0; j < n; ++j)
                     C.arr[j][i] = arr[i][j];
+            return C;
+        }
+
+        template <class T>
+        Matrix<T> Matrix<T>::rotate180 () const {
+            if (!arr)
+                throw Error::Matrix(":rotate180: matrix not initialized");
+            Matrix C(m, n);
+            for (int i = 0; i < m; ++i)
+                for (int j = 0; j < n; ++j)
+                    C.arr[i][j] = arr[m-i-1][n-j-1];
             return C;
         }
 

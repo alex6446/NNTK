@@ -48,6 +48,7 @@ void functions () {
     cout << "A.flatten(1)\n" << A.flatten(1) << endl;
     cout << "A.reshape(4, 3)\n" << A.reshape(6, 2) << endl;
     cout << "A.transpose()\n" << A.transpose() << endl;
+    cout << "A.rotate180()\n" << A.rotate180() << endl;
     cout << "A.apply(ReLU, 0)\n" << A.apply(Activation::ReLU, 0) << endl;
     MX::Matrixi C = MX::Matrixi(3, 4).randomize(-5, 5);
     MX::Matrixi D = MX::Matrixi(4, 2).randomize(-5, 5);
