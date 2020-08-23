@@ -27,7 +27,6 @@ namespace NN {
                 b = MX::Matrixf(size, 1).randomize(rand_a, rand_b);
         }
 
-        // should work
         void Conv2D::forwardProp (const void* X) {
             this->X = (std::vector<MX::Image>*)X;
             int bs = this->X->size(); // batch size
@@ -51,7 +50,7 @@ namespace NN {
                         A[i][j] = Z[i][j].apply(g, 0, hp);
             } else A = Z;
         }
-        // AHTUNG !!!!!!!!! INCORRECT !!!!!!!!
+
         void Conv2D::backProp (const void* gradient) {
             dZ = *((std::vector<MX::Image>*)gradient);
             delete (std::vector<MX::Image>*)gradient;
