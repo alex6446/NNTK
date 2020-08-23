@@ -2,7 +2,15 @@
 
 namespace NN {
 
+    namespace Activation {
+
+        float (*None) (float, int, float) = nullptr;
+
+    }
+
     namespace Loss {
+
+        const void* (*None) (const MX::Matrixf&, const MX::Matrixf&, int, float) = nullptr;
 
         const void* MSE (const MX::Matrixf& A, const MX::Matrixf& Y, int mode, float hp) {
             MX::Matrixf* loss = new MX::Matrixf;
