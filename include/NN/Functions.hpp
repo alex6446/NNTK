@@ -9,7 +9,7 @@ namespace NN {
 
     namespace Activation {
 
-        #define None nullptr;
+        #define None nullptr
 
         template <class T>
         T Sigmoid (T x, int mode = 0, float hp = 1) {
@@ -33,7 +33,7 @@ namespace NN {
 
     namespace Loss {
 
-        #define None nullptr;
+        #define None nullptr
 
         // Assuming each column is a separate output layer
         const void* MSE (const MX::Matrixf& A, const MX::Matrixf& Y, int mode, float hp);

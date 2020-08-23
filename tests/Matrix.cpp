@@ -86,6 +86,8 @@ void accessors () {
     cout << "A\n" << A << endl;
     cout << "A(2, 3)\n" << A(2, 3) << endl;
     cout << "A.get(2, 8)\n" << A.get(2, 8) << endl;
+    A.add(2, 3, 1);
+    cout << "A.add(2, 3, 1)\n" << A << endl;
     cout << "A.rows()\n" << A.rows() << endl;
     cout << "A.cols()\n" << A.cols() << endl;
     cout << "A.elements()\n" << A.elements() << endl;

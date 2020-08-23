@@ -3,6 +3,7 @@
 #include <iostream>
 #include <random>
 #include <initializer_list>
+#include <vector>
 
 #include "NN/Error.hpp"
 
@@ -22,6 +23,7 @@ namespace NN {
         Matrix<T> Sum (const Matrix<T>& A, int axis);
         template <class T>
         Matrix<T> Convolve (const Matrix<T>& A, const Matrix<T>& kernel, int padding=0, int stride=0);
+        
     }
 
     // Matrix interface
@@ -70,6 +72,7 @@ namespace NN {
             T& operator() (int i, int j);
             T const& operator() (int i, int j) const;
             T get (int i, int j, T a=0) const;
+            void add (int i, int j, T a);
             inline int rows() const { return m; }
             inline int cols() const { return n; }
             inline int elements() const { return m * n; }
@@ -182,6 +185,9 @@ namespace NN {
         typedef Matrix<float> Matrixf;
         typedef Matrix<double> Matrixd;
         typedef Matrix<int> Matrixi;
+
+        typedef std::vector<Matrix<float>> Image;
+        typedef std::vector<Matrix<float>> Filter;
     
     } // namespace MX
 
@@ -241,13 +247,15 @@ namespace NN {
         template <class T>
         Matrix<T>::Matrix (const Matrix& copy)
         : m(copy.m), n(copy.n), arr(nullptr) {
-            Create(copy.arr);
+            if (copy.arr)
+                Create(copy.arr);
         }
 
         template <class T>
         Matrix<T>::Matrix (Matrix&& move)
         : m(move.m), n(move.n), arr(nullptr) {
-            Create(move.arr);
+            if (move.arr)
+                Create(move.arr);
         }
 
         template <class T>
@@ -474,6 +482,14 @@ namespace NN {
             if (i < 0 || j < 0) return a;
             if (i >= m || j >= n) return a;
             return arr[i][j];
+        }
+
+        template <class T>
+        void Matrix<T>::add (int i, int j, T a) {
+            if (!arr) return;
+            if (i < 0 || j < 0) return;
+            if (i >= m || j >= n) return;
+            arr[i][j] += a;
         }
 
         template <class T>
@@ -823,8 +839,6 @@ namespace NN {
         Matrix<T> Convolve (const Matrix<T>& A, const Matrix<T>& kernel, int padding, int stride) {
             if (!A.arr || !kernel.arr)
                 throw Error::Matrix(":Convolve: matrix not initialized");
-            if (padding < 0)
-                throw Error::Matrix(":Convolve: negative padding");
             if (stride < 1)
                 throw Error::Matrix(":Convolve: stride is less than one");
             int cm = (A.m + 2*padding - kernel.m) / stride + 1;
