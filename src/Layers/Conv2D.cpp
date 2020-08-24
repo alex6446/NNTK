@@ -77,6 +77,11 @@ namespace NN {
                     if (bias)
                         db(j, 0) += MX::Sum(dZ[i][j]);
                 }
+            for (int j = 0; j < size; ++j) // loop through each filter
+                for (int k = 0; k < cs; ++k) // loop through each channel
+                    dW[j][k] /= bs;
+            if (bias)
+                db /= bs;
         }
 
         void Conv2D::update (float learning_rate) {

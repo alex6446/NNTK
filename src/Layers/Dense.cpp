@@ -38,9 +38,8 @@ namespace NN {
             dZ = *((MX::Matrixf*)gradient);
             delete (MX::Matrixf*)gradient;
             if (g) dZ *= Z.apply(g, 1, hp);
-            float k = 1.f / dZ.cols();
-            dW = k * MX::Dot(dZ, X->transpose());
-            if (bias) db = k * MX::Sum(dZ, 1);
+            dW = MX::Dot(dZ, X->transpose()) / dZ.cols();
+            if (bias) db = MX::Sum(dZ, 1) / dZ.cols();
         }
 
         void Dense::update (float learning_rate) {
