@@ -19,7 +19,6 @@ namespace NN {
             MX::Matrixf Z; 
             MX::Matrixf A;
             MX::Matrixf dZ;
-            MX::Matrixf dA;
 
             const MX::Matrixf* X;
 

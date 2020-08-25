@@ -55,6 +55,49 @@ namespace NN {
         }
     }
 
+    void Sequential::fit (
+        const std::vector<MX::Image>& X, 
+        const MX::Matrixf& Y,
+        const void* (*l) (const MX::Matrixf&, const MX::Matrixf&, int, float),
+        int batch_size,
+        int epochs,
+        float learning_rate,
+        float hyperparameter
+    ) {
+        build({ (int)X[0].size(), X[0][0].rows(), X[0][0].cols() });
+        int epoch = 0;
+        std::vector<MX::Image> bX(batch_size); // batch input
+        MX::Matrixf bY(Y.cols(), batch_size); // batch output
+        int sample = 0; // current sample in database
+        
+        while (epoch < epochs) {
+            bX.clear();
+            for (int j = 0; j < batch_size; ++j) {
+                bX.push_back(X[sample]);
+                for (int i = 0; i < bY.rows(); ++i)
+                    bY(i, j) = Y(sample, i);
+                ++sample;
+                if (sample >= X.size()) {
+                    ++epoch;
+                    sample = 0;
+                }
+            }
+            // forward propagation
+            L[0]->forwardProp(&bX);
+            for (int i = 1; i < L.size(); ++i)
+                L[i]->forwardProp(L[i-1]->getA());
+            
+            // back propagation
+            L[L.size()-1]->backProp(l(*((const MX::Matrixf*)L[L.size()-1]->getA()), bY, 1, hyperparameter));
+            for (int i = L.size()-2; i >= 0; --i)
+                L[i]->backProp(L[i+1]->getGradient());
+
+            // update weights
+            for (int i = 0; i < L.size(); ++i)
+                L[i]->update(learning_rate);
+        }
+    }
+
     void Sequential::build (const std::vector<int>& dimensions) {
         L[0]->bind(dimensions);
         for (int i = 1; i < L.size(); ++i)
@@ -67,6 +110,22 @@ namespace NN {
         for (int i = 1; i < L.size(); ++i)
             L[i]->forwardProp(L[i-1]->getA());
         return *((MX::Matrixf*)(L[L.size()-1]->getA()));
+    }
+
+    MX::Matrixf Sequential::predict (const std::vector<MX::Image>& X) {
+        // forward propagation
+        L[0]->forwardProp(&X);
+        for (int i = 1; i < L.size(); ++i)
+            L[i]->forwardProp(L[i-1]->getA());
+        return *((MX::Matrixf*)(L[L.size()-1]->getA()));
+    }
+
+    std::vector<MX::Image> Sequential::predict2D (const std::vector<MX::Image>& X) {
+        // forward propagation
+        L[0]->forwardProp(&X);
+        for (int i = 1; i < L.size(); ++i)
+            L[i]->forwardProp(L[i-1]->getA());
+        return *((std::vector<MX::Image>*)(L[L.size()-1]->getA()));
     }
 
 }

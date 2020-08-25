@@ -94,6 +94,7 @@ namespace NN {
 
         void Conv2D::bind (const std::vector<int>& dimensions) {
             W = std::vector<MX::Filter>(size, MX::Filter(dimensions[0], MX::Matrixf(f, f).randomize(rand_a, rand_b)));
+            Xdims = dimensions;
         }
 
         const void* Conv2D::getGradient () const {
@@ -110,6 +111,15 @@ namespace NN {
                                     for (int fj = 0; fj < f; ++fj)
                                         (*(dX))[i][k].add(xi+fi, xj+fj, W[j][k](fi, fj) * dZ[i][j](zi, zj));
             return dX;
+        }
+
+        std::vector<int> Conv2D::getDimensions () const {
+            std::vector<int> Adims = {
+                size, // number of channels
+                (Xdims[1] + 2*p - f) / s + 1, // A m
+                (Xdims[2] + 2*p - f) / s + 1 // A n
+            };
+            return Adims; 
         }
 
     } // namespace Layer

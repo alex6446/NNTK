@@ -71,3 +71,17 @@ project "Conv2D-test"
     objdir ("tests/obj/" .. outputdir .. "/%{prj.name}")
     files { "tests/Conv2D.cpp" }
     links { "NN-Toolkit" } 
+
+project "Flatten-test"
+    kind "ConsoleApp"
+    targetdir ("tests/bin/" .. outputdir .. "/%{prj.name}")
+    objdir ("tests/obj/" .. outputdir .. "/%{prj.name}")
+    files { "tests/Flatten.cpp" }
+    links { "NN-Toolkit" } 
+
+project "CNN-test"
+    kind "ConsoleApp"
+    targetdir ("tests/bin/" .. outputdir .. "/%{prj.name}")
+    objdir ("tests/obj/" .. outputdir .. "/%{prj.name}")
+    files { "tests/CNN.cpp" }
+    links { "NN-Toolkit" } 

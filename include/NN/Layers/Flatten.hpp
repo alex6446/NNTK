@@ -1,7 +1,5 @@
 #pragma once
 
-#include <vector>
-
 #include "NN/Matrix.hpp"
 #include "NN/Error.hpp"
 #include "NN/Layers/Base.hpp"
@@ -11,24 +9,18 @@ namespace NN {
 
     namespace Layer {
 
-        class Conv2D : public Base {
+        class Flatten : public Base {
         private:
-            
-            std::vector<MX::Filter> W;
-            std::vector<MX::Filter> dW;
 
-            // volumes for the whole dataset
-            std::vector<MX::Image> Z; 
-            std::vector<MX::Image> A;
-            std::vector<MX::Image> dZ;
+            // neurons for the whole dataset
+            MX::Matrixf Z; 
+            MX::Matrixf A;
+            MX::Matrixf dZ;
 
             const std::vector<MX::Image>* X;
-            std::vector<int> Xdims; // X dimensions
 
-            int size; // number of filters 
-            int f; // filter dimensions
-            int p; // padding
-            int s; // stride
+            // total number of neurons
+            int size;
 
             // random initialization range
             int rand_a;
@@ -36,13 +28,9 @@ namespace NN {
 
         public:
 
-            Conv2D (
-                int filters,
-                int filter_size=3,
-                int padding=0,
-                int stride=1,
-                float (*activation) (float, int, float) = Activation::ReLU,
-                bool bias = true,
+            Flatten (
+                float (*activation) (float, int, float) = Activation::None,
+                bool bias = false,
                 int rand_from = -1,
                 int rand_to = 1,
                 float hyperparameter = 1
@@ -55,7 +43,7 @@ namespace NN {
 
             inline const void* getA () const override { return &A; }
             const void* getGradient () const override;
-            std::vector<int> getDimensions () const override;
+            inline std::vector<int> getDimensions () const override { return { size }; }
         };
 
     } // namespace Layer

@@ -7,4 +7,5 @@
 #include "NN/Layers/Base.hpp"
 #include "NN/Layers/Dense.hpp"
 #include "NN/Layers/Conv2D.hpp"
+#include "NN/Layers/Flatten.hpp"
 

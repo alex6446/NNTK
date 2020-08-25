@@ -52,7 +52,7 @@ int main () {
     //     }
     // };
     Layer::Conv2D lc(2, 3, 1, 2, Activation::None, true, -2, 2);
-    lc.bind({ (int)X[0].size() });
+    lc.bind({ (int)X[0].size(), X[0][0].rows(), X[0][0].cols() });
     lc.forwardProp(&X);
     std::vector<MX::Image> A = *((std::vector<MX::Image>*)lc.getA());
     std::cout << "A" << std::endl;
