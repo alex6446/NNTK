@@ -9,4 +9,5 @@
 #include "NN/Layers/Conv2D.hpp"
 #include "NN/Layers/Flatten.hpp"
 #include "NN/Layers/MaxPooling2D.hpp"
+#include "NN/Layers/AveragePooling2D.hpp"
 

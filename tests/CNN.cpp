@@ -28,7 +28,7 @@ int main () {
     model.add(new Layer::Conv2D(4, 3, 1, 1));
     model.add(new Layer::MaxPooling2D());
     model.add(new Layer::Conv2D(10, 2));
-    model.add(new Layer::MaxPooling2D());
+    model.add(new Layer::AveragePooling2D());
     model.add(new Layer::Flatten(Activation::ReLU, true));
     model.add(new Layer::Dense(10));
     model.add(new Layer::Dense(2));
