@@ -61,7 +61,6 @@ namespace NN {
                     for (int j = 0; j < dZ[0].size(); ++j)
                         dZ[i][j] *= Z[i][j].apply(g, 1, hp);
             }
-            float k = 1.f / bs;
             dW = std::vector<MX::Filter>(W.size(), MX::Filter(W[0].size(), MX::Matrixf(f, f)));
             if (bias)
                 db = MX::Matrixf(b.rows(), b.cols());

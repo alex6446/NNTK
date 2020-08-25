@@ -79,6 +79,13 @@ project "Flatten-test"
     files { "tests/Flatten.cpp" }
     links { "NN-Toolkit" } 
 
+project "MaxPooling2D-test"
+    kind "ConsoleApp"
+    targetdir ("tests/bin/" .. outputdir .. "/%{prj.name}")
+    objdir ("tests/obj/" .. outputdir .. "/%{prj.name}")
+    files { "tests/MaxPooling2D.cpp" }
+    links { "NN-Toolkit" }
+
 project "CNN-test"
     kind "ConsoleApp"
     targetdir ("tests/bin/" .. outputdir .. "/%{prj.name}")

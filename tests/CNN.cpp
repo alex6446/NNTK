@@ -26,8 +26,10 @@ int main () {
 
     Sequential model;
     model.add(new Layer::Conv2D(4, 3, 1, 1));
+    model.add(new Layer::MaxPooling2D());
     model.add(new Layer::Conv2D(10, 2));
-    model.add(new Layer::Flatten());
+    model.add(new Layer::MaxPooling2D());
+    model.add(new Layer::Flatten(Activation::ReLU, true));
     model.add(new Layer::Dense(10));
     model.add(new Layer::Dense(2));
     model.fit(X, Y, Loss::MSE, 2, 200);

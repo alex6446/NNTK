@@ -3,7 +3,6 @@
 #include <vector>
 
 #include<NN/Layers/Base.hpp>
-#include<NN/Layers/Dense.hpp>
 
 namespace NN {
 
