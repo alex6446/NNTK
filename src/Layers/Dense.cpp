@@ -17,8 +17,6 @@ namespace NN {
         {
             g = activation;
             this->bias = bias;
-            if (bias)
-                b = MX::Matrixf(size, 1).randomize(rand_a, rand_b);
         }
 
         void Dense::forwardProp (const void* X) {
@@ -50,6 +48,8 @@ namespace NN {
 
         void Dense::bind (const std::vector<int>& dimensions) {
             W = MX::Matrixf(size, dimensions[0]).randomize(rand_a, rand_b);
+            if (bias)
+                b = MX::Matrixf(size, 1).randomize(rand_a, rand_b);
         }
 
     } // namespace Layer

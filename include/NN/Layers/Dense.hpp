@@ -32,13 +32,20 @@ namespace NN {
         public:
 
             Dense (
-                int neurons,
+                int neurons=1,
                 float (*activation) (float, int, float) = Activation::Sigmoid,
                 bool bias = true,
                 int rand_from = -1,
                 int rand_to = 1,
                 float hyperparameter = 1
             );
+
+            inline Dense* sNeurons (int size) { this->size = size; return this; }
+            inline Dense* sActivation (float (*g) (float, int, float)) { this->g = g; return this; }
+            inline Dense* sBias (bool bias) { this->bias = bias; return this; }
+            inline Dense* sRandFrom (bool rand_a) { this->rand_a = rand_a; return this; }
+            inline Dense* sRandTo (bool rand_b) { this->rand_b = rand_b; return this; }
+            inline Dense* sHyperparameter (bool hp) { this->hp = hp; return this; }
 
             void forwardProp (const void* X) override;
             void backProp (const void* gradient) override;

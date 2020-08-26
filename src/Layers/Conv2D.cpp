@@ -23,8 +23,6 @@ namespace NN {
         {
             g = activation;
             this->bias = bias;
-            if (bias)
-                b = MX::Matrixf(size, 1).randomize(rand_a, rand_b);
         }
 
         void Conv2D::forwardProp (const void* X) {
@@ -94,6 +92,8 @@ namespace NN {
         void Conv2D::bind (const std::vector<int>& dimensions) {
             W = std::vector<MX::Filter>(size, MX::Filter(dimensions[0], MX::Matrixf(f, f).randomize(rand_a, rand_b)));
             Xdims = dimensions;
+            if (bias)
+                b = MX::Matrixf(size, 1).randomize(rand_a, rand_b);
         }
 
         const void* Conv2D::getGradient () const {

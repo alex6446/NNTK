@@ -43,6 +43,15 @@ namespace NN {
                 float hyperparameter = 1
             );
 
+            inline AveragePooling2D* sPoolSize (int f) { this->f = f; return this; }
+            inline AveragePooling2D* sPadding (bool p) { this->p = p; return this; }
+            inline AveragePooling2D* sStride (bool s) { this->s = s; return this; }
+            inline AveragePooling2D* sActivation (float (*g) (float, int, float)) { this->g = g; return this; }
+            inline AveragePooling2D* sBias (bool bias) { this->bias = bias; return this; }
+            inline AveragePooling2D* sRandFrom (bool rand_a) { this->rand_a = rand_a; return this; }
+            inline AveragePooling2D* sRandTo (bool rand_b) { this->rand_b = rand_b; return this; }
+            inline AveragePooling2D* sHyperparameter (bool hp) { this->hp = hp; return this; }
+
             void forwardProp (const void* X) override;
             void backProp (const void* gradient) override;
             void update (float learning_rate) override;

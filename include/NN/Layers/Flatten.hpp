@@ -36,6 +36,12 @@ namespace NN {
                 float hyperparameter = 1
             );
 
+            inline Flatten* sActivation (float (*g) (float, int, float)) { this->g = g; return this; }
+            inline Flatten* sBias (bool bias) { this->bias = bias; return this; }
+            inline Flatten* sRandFrom (bool rand_a) { this->rand_a = rand_a; return this; }
+            inline Flatten* sRandTo (bool rand_b) { this->rand_b = rand_b; return this; }
+            inline Flatten* sHyperparameter (bool hp) { this->hp = hp; return this; }
+
             void forwardProp (const void* X) override;
             void backProp (const void* gradient) override;
             void update (float learning_rate) override;

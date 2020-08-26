@@ -2,7 +2,7 @@
 
 #include <iostream>
 
-int main () {
+void CNN () {
     using namespace NN;
     srand(time(NULL));
 
@@ -25,14 +25,26 @@ int main () {
     }            
 
     Sequential model;
-    model.add(new Layer::Conv2D(4, 3, 1, 1));
-    model.add(new Layer::MaxPooling2D());
-    model.add(new Layer::Conv2D(10, 2));
-    model.add(new Layer::AveragePooling2D());
-    model.add(new Layer::Flatten(Activation::ReLU, true));
-    model.add(new Layer::Dense(10));
-    model.add(new Layer::Dense(2));
+    model.add((new Layer::Conv2D())->sFilters(4)->sPadding(1));
+    model.add((new Layer::MaxPooling2D()));
+    model.add((new Layer::Conv2D())->sFilters(10)->sPadding(2));
+    model.add((new Layer::AveragePooling2D()));
+    model.add((new Layer::Flatten())->sActivation(Activation::ReLU)->sBias(true));
+    model.add((new Layer::Dense())->sNeurons(10));
+    model.add((new Layer::Dense())->sNeurons(2));
     model.fit(X, Y, Loss::MSE, 2, 200);
     std::cout << model.predict(X) << std::endl;
+}
 
+int main () {
+    using namespace std;
+
+    clock_t begin = clock();
+    srand(time(NULL));
+
+    CNN();
+
+    clock_t end = clock();
+    double elapsed_secs = double(end - begin) / CLOCKS_PER_SEC;
+    cout << "TIME: " << elapsed_secs << "s" << endl;
 }
