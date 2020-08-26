@@ -23,6 +23,7 @@ namespace NN {
         {
             g = activation;
             this->bias = bias;
+            bound = false;
         }
 
         void Conv2D::forwardProp (const void* X) {
@@ -90,10 +91,12 @@ namespace NN {
         }
 
         void Conv2D::bind (const std::vector<int>& dimensions) {
+            if (bound) return;
             W = std::vector<MX::Filter>(size, MX::Filter(dimensions[0], MX::Matrixf(f, f).randomize(rand_a, rand_b)));
             Xdims = dimensions;
             if (bias)
                 b = MX::Matrixf(size, 1).randomize(rand_a, rand_b);
+            bound = true;
         }
 
         const void* Conv2D::getGradient () const {

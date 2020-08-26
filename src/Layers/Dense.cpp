@@ -17,6 +17,7 @@ namespace NN {
         {
             g = activation;
             this->bias = bias;
+            bound = false;
         }
 
         void Dense::forwardProp (const void* X) {
@@ -47,9 +48,11 @@ namespace NN {
         }
 
         void Dense::bind (const std::vector<int>& dimensions) {
+            if (bound) return;
             W = MX::Matrixf(size, dimensions[0]).randomize(rand_a, rand_b);
             if (bias)
                 b = MX::Matrixf(size, 1).randomize(rand_a, rand_b);
+            bound = true;
         }
 
     } // namespace Layer

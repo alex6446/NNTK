@@ -21,6 +21,7 @@ namespace NN {
         {
             g = activation;
             this->bias = bias;
+            bound = false;
         }
 
         void AveragePooling2D::forwardProp (const void* X) {
@@ -80,9 +81,11 @@ namespace NN {
         }
 
         void AveragePooling2D::bind (const std::vector<int>& dimensions) {
+            if (bound) return;
             Xdims = dimensions;
             if (bias)
                 b = MX::Matrixf(dimensions[0], 1).randomize(rand_a, rand_b);
+            bound = true;
         }
 
         const void* AveragePooling2D::getGradient () const {

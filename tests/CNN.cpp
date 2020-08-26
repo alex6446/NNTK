@@ -28,6 +28,10 @@ void CNN () {
     model.add((new Layer::Dense())->sNeurons(10));
     model.add((new Layer::Dense())->sNeurons(2));
     model.fit(X, Y, Loss::MSE, 2, 200);
+    model.fit(X, Y, Loss::MSE, 2, 2);
+    std::cout << model.predict(X) << std::endl;
+    model.reset();
+    model.fit(X, Y, Loss::MSE, 2, 2);
     std::cout << model.predict(X) << std::endl;
 }
 

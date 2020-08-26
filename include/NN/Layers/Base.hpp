@@ -18,6 +18,8 @@ namespace NN {
             float (*g) (float, int, float); // activation function
             float hp; // hyperparameter
 
+            bool bound;
+
         public:
 
             virtual void forwardProp (const void* X) = 0;
@@ -25,6 +27,7 @@ namespace NN {
 
             virtual void update (float learning_rate) = 0;
             virtual void bind (const std::vector<int>& dimensions) = 0;
+            virtual inline void reset () { bound = false; }
 
             virtual const void* getA () const = 0;
             virtual const void* getGradient () const = 0;

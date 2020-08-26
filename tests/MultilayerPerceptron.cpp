@@ -18,6 +18,10 @@ int main () {
     Sequential model;
     model.add(new Layer::Dense(1, Activation::Sigmoid, true));
     model.fit(X, Y, Loss::MSE, 4, 20000);
+    model.fit(X, Y, Loss::MSE, 2, 200);
+    std::cout << model.predict(X) << std::endl;
+    model.reset();
+    model.fit(X, Y, Loss::MSE, 4, 20);
     std::cout << model.predict(X) << std::endl;
 
 }

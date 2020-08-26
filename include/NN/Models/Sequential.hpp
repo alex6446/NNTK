@@ -38,6 +38,7 @@ namespace NN {
         );
 
         void build (const std::vector<int>& dimensions); // sample input dimensions
+        void reset () { for (auto& i : L) i->reset(); }
 
         MX::Matrixf predict (const MX::Matrixf& X);
         MX::Matrixf predict (const std::vector<MX::Image>& X);

@@ -15,6 +15,7 @@ namespace NN {
         {
             g = activation;
             this->bias = bias;
+            bound = false;
         }
 
         void Flatten::forwardProp (const void* X) {
@@ -49,9 +50,11 @@ namespace NN {
         }
 
         void Flatten::bind (const std::vector<int>& dimensions) {
+            if (bound) return;
             size = dimensions[0] * dimensions[1] * dimensions[2];
             if (bias)
                 b = MX::Matrixf(size, 1).randomize(rand_a, rand_b);
+            bound = true;
         }
 
         const void* Flatten::getGradient () const {

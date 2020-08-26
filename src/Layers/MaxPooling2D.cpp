@@ -21,6 +21,7 @@ namespace NN {
         {
             g = activation;
             this->bias = bias;
+            bound = false;
         }
 
         void MaxPooling2D::forwardProp (const void* X) {
@@ -84,9 +85,11 @@ namespace NN {
         }
 
         void MaxPooling2D::bind (const std::vector<int>& dimensions) {
+            if (bound) return;
             Xdims = dimensions;
             if (bias)
                 b = MX::Matrixf(dimensions[0], 1).randomize(rand_a, rand_b);
+            bound = true;
         }
 
         const void* MaxPooling2D::getGradient () const {
