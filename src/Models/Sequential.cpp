@@ -21,24 +21,25 @@ namespace NN {
         float learning_rate,
         float hyperparameter
     ) {
-        build({ X.cols() });
+        build({ X.rows() });
         int epoch = 0;
-        MX::Matrixf bX(X.cols(), batch_size); // batch input
-        MX::Matrixf bY(Y.cols(), batch_size); // batch output
+        MX::Matrixf bX(X.rows(), batch_size); // batch input
+        MX::Matrixf bY(Y.rows(), batch_size); // batch output
         int sample = 0; // current sample in database
         
         while (epoch < epochs) {
             for (int j = 0; j < bX.cols(); ++j) {
                 for (int i = 0; i < bX.rows(); ++i)
-                    bX(i, j) = X(sample, i);
+                    bX(i, j) = X(i, sample);
                 for (int i = 0; i < bY.rows(); ++i)
-                    bY(i, j) = Y(sample, i);
+                    bY(i, j) = Y(i, sample);
                 ++sample;
-                if (sample >= X.rows()) {
+                if (sample >= X.cols()) {
                     ++epoch;
                     sample = 0;
                 }
             }
+
             // forward propagation
             L[0]->forwardProp(&bX);
             for (int i = 1; i < L.size(); ++i)
@@ -67,7 +68,7 @@ namespace NN {
         build({ (int)X[0].size(), X[0][0].rows(), X[0][0].cols() });
         int epoch = 0;
         std::vector<MX::Image> bX(batch_size); // batch input
-        MX::Matrixf bY(Y.cols(), batch_size); // batch output
+        MX::Matrixf bY(Y.rows(), batch_size); // batch output
         int sample = 0; // current sample in database
         
         while (epoch < epochs) {
@@ -75,13 +76,14 @@ namespace NN {
             for (int j = 0; j < batch_size; ++j) {
                 bX.push_back(X[sample]);
                 for (int i = 0; i < bY.rows(); ++i)
-                    bY(i, j) = Y(sample, i);
+                    bY(i, j) = Y(i, sample);
                 ++sample;
                 if (sample >= X.size()) {
                     ++epoch;
                     sample = 0;
                 }
             }
+
             // forward propagation
             L[0]->forwardProp(&bX);
             for (int i = 1; i < L.size(); ++i)

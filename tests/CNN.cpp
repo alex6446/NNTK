@@ -9,15 +9,10 @@ void CNN () {
     std::vector<MX::Image> X(8);
                      
     MX::Matrixf Y = MX::Matrixf({
-        {1, 0,},
-        {0, 1,},
-        {0, 1,},
-        {1, 0,},
-        {0, 1,},
-        {1, 0,},
-        {0, 1,},
-        {1, 0,}
+        { 1, 0, 0, 1, 0, 1, 0, 1 },
+        { 0, 1, 1, 0, 1, 0, 1, 0 }
     });
+
     for (int i = 0; i < X.size(); ++i) {
         X[i].push_back(MX::Matrixf(28, 28).randomize(0, 1));             
         X[i].push_back(MX::Matrixf(28, 28).randomize(0, 1));             

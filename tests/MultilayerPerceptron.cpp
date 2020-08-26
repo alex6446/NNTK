@@ -6,17 +6,18 @@ int main () {
     using namespace NN;
     srand(time(NULL));
 
-    MX::Matrixf X = {{0, 0, 1},
-                     {1, 1, 1},
-                     {1, 0, 1},
-                     {0, 1, 1}};
+    MX::Matrixf X = MX::Matrixf({
+        {0, 0, 1},
+        {1, 1, 1},
+        {1, 0, 1},
+        {0, 1, 1}}).transpose();
                      
-    MX::Matrixf Y = MX::Matrixf({0, 1, 1, 0}).transpose();
+    MX::Matrixf Y = {0, 1, 1, 0};
                                 
 
     Sequential model;
     model.add(new Layer::Dense(1, Activation::Sigmoid, true));
     model.fit(X, Y, Loss::MSE, 4, 20000);
-    std::cout << model.predict(X.transpose()) << std::endl;
+    std::cout << model.predict(X) << std::endl;
 
 }
