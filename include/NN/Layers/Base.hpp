@@ -22,11 +22,16 @@ namespace NN {
 
         public:
 
+            // obviously void* to Base* overload looks like crazy
+            // but as a research shows that should work in all cases
             virtual void forwardProp (const void* X) = 0;
+            virtual void forwardProp (const Base* layer) { forwardProp(layer->getA()); }
             virtual void backProp (const void* gradient) = 0;
+            virtual void backProp (const Base* layer) { backProp(layer->getGradient()); }
 
             virtual void update (float learning_rate) = 0;
             virtual void bind (const std::vector<int>& dimensions) = 0;
+            virtual void bind (const Base* layer) { bind(layer->getDimensions()); }
             virtual inline void reset () { bound = false; }
 
             virtual const void* getA () const = 0;

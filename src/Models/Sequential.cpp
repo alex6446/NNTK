@@ -43,12 +43,12 @@ namespace NN {
             // forward propagation
             L[0]->forwardProp(&bX);
             for (int i = 1; i < L.size(); ++i)
-                L[i]->forwardProp(L[i-1]->getA());
+                L[i]->forwardProp(L[i-1]);
             
             // back propagation
             L[L.size()-1]->backProp(l(*((const MX::Matrixf*)L[L.size()-1]->getA()), bY, 1, hyperparameter));
             for (int i = L.size()-2; i >= 0; --i)
-                L[i]->backProp(L[i+1]->getGradient());
+                L[i]->backProp(L[i+1]);
 
             // update weights
             for (int i = 0; i < L.size(); ++i)
@@ -87,12 +87,12 @@ namespace NN {
             // forward propagation
             L[0]->forwardProp(&bX);
             for (int i = 1; i < L.size(); ++i)
-                L[i]->forwardProp(L[i-1]->getA());
+                L[i]->forwardProp(L[i-1]);
             
             // back propagation
             L[L.size()-1]->backProp(l(*((const MX::Matrixf*)L[L.size()-1]->getA()), bY, 1, hyperparameter));
             for (int i = L.size()-2; i >= 0; --i)
-                L[i]->backProp(L[i+1]->getGradient());
+                L[i]->backProp(L[i+1]);
 
             // update weights
             for (int i = 0; i < L.size(); ++i)
@@ -103,7 +103,7 @@ namespace NN {
     void Sequential::build (const std::vector<int>& dimensions) {
         L[0]->bind(dimensions);
         for (int i = 1; i < L.size(); ++i)
-            L[i]->bind(L[i-1]->getDimensions());
+            L[i]->bind(L[i-1]);
     }
 
     MX::Matrixf Sequential::predict (const MX::Matrixf& X) {
