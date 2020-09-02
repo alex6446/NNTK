@@ -23,5 +23,6 @@ int main () {
     model.reset();
     model.fit(X, Y, Loss::MSE, 4, 20);
     std::cout << model.predict(X) << std::endl;
+    model.layers()[0]->print();
 
 }

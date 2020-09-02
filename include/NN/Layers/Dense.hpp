@@ -55,6 +55,16 @@ namespace NN {
             inline const void* getA () const override { return &A; }
             inline const void* getGradient () const override { return new MX::Matrixf(MX::Dot(W.transpose(), dZ)); }
             inline std::vector<int> getDimensions () const override { return { size }; }
+
+            inline void print () const override { std::cout << *this; }
+            void save (std::string file) const override;
+            void load (std::string file) override;
+            inline void output (std::ostream& os) override { os << *this; }
+            inline void input (std::istream& is) override { is >> *this; }
+
+            friend std::ostream& operator<< (std::ostream& os, const Dense& l);
+            friend std::istream& operator>> (std::istream& is, Dense& l);
+
         };
 
     } // namespace Layer

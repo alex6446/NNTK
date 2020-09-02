@@ -1,7 +1,5 @@
 #pragma once
 
-#include <vector>
-
 #include "NN/Matrix.hpp"
 #include "NN/Error.hpp"
 #include "NN/Layers/Base.hpp"
@@ -60,6 +58,16 @@ namespace NN {
             inline const void* getA () const override { return &A; }
             const void* getGradient () const override;
             std::vector<int> getDimensions () const override;
+
+            inline void print () const override { std::cout << *this; }
+            void save (std::string file) const override;
+            void load (std::string file) override;
+            inline void output (std::ostream& os) override { os << *this; }
+            inline void input (std::istream& is) override { is >> *this; }
+
+            friend std::ostream& operator<< (std::ostream& os, const AveragePooling2D& l);
+            friend std::istream& operator>> (std::istream& is, AveragePooling2D& l);
+
         };
 
     } // namespace Layer

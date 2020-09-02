@@ -1,8 +1,12 @@
 #pragma once
 
 #include <vector>
+#include <iostream>
+#include <fstream>
 
 #include "NN/Matrix.hpp"
+
+#define FUNC_DEF(func) #func
 
 namespace NN {
 
@@ -38,7 +42,48 @@ namespace NN {
             virtual const void* getGradient () const = 0;
             virtual std::vector<int> getDimensions () const = 0;
 
+            virtual void print () const = 0;
+            virtual void save (std::string file) const = 0;
+            virtual void load (std::string file) = 0;
+            virtual void output (std::ostream& os) = 0;
+            virtual void input (std::istream& is) = 0;
+
         };
+
+        template <class T>
+        std::ostream& operator<< (std::ostream& os, const std::vector<T>& A) {
+            os << "{ ";
+            for (int i = 0; i < A.size(); ++i)
+                os << A[i] << (i == A.size() - 1 ? " " : ", ");
+            os << "}";
+            return os;
+        }
+
+        template <class T>
+        std::istream& operator>> (std::istream& is, std::vector<T>& A) {
+            A.clear();
+            while (is.peek() != '{' && !is.eof()) is.ignore();
+            is.ignore();
+            while (is.peek() != '}') {
+                if (is.peek() == EOF)
+                    throw Error::Base(":vector:operator>>: closing brace is missing");
+                switch (is.peek()) {
+                    case '\t':
+                    case '\n':
+                    case ' ':
+                    case ',': 
+                        is.ignore(); break;
+                    default:
+                        if ((is.peek() < 48 || is.peek() > 57) && is.peek() != '.')
+                            throw Error::Base(":vector:operator>>: unknown symbol");
+                        T number;
+                        is >> number;
+                        A.push_back(number);
+                }
+            }
+            is.ignore();
+            return is;
+        }
 
     } // namespace Layer
 

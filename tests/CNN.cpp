@@ -30,9 +30,14 @@ void CNN () {
     model.fit(X, Y, Loss::MSE, 2, 200);
     model.fit(X, Y, Loss::MSE, 2, 2);
     std::cout << model.predict(X) << std::endl;
+    model.save("tests/files/CNN.model");
     model.reset();
     model.fit(X, Y, Loss::MSE, 2, 2);
     std::cout << model.predict(X) << std::endl;
+
+    Sequential model2;
+    model2.load("tests/files/CNN.model");
+    std::cout << model2.predict(X) << std::endl;
 }
 
 int main () {

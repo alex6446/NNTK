@@ -68,6 +68,7 @@ int main () {
     lc.update(2.f);
     //cout << MX::Matrixi(3, 3).randomize(1, 6) << endl;
     //cout << MX::Matrixi(3, 3).randomize(1, 6) << endl;
+    lc.print();
 
 }
 

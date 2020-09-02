@@ -45,6 +45,7 @@ int main () {
             std::cout << "{ " << j  << " }" << std::endl;
     lf.update(2.f);
     //cout << MX::Matrixi(1, 40).randomize(1, 6) << endl;
+    lf.print();
 
 }
 

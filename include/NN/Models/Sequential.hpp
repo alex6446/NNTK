@@ -2,7 +2,12 @@
 
 #include <vector>
 
-#include<NN/Layers/Base.hpp>
+#include "NN/Layers/Base.hpp"
+#include "NN/Layers/Dense.hpp"
+#include "NN/Layers/Conv2D.hpp"
+#include "NN/Layers/Flatten.hpp"
+#include "NN/Layers/MaxPooling2D.hpp"
+#include "NN/Layers/AveragePooling2D.hpp"
 
 namespace NN {
 
@@ -39,10 +44,18 @@ namespace NN {
 
         void build (const std::vector<int>& dimensions); // sample input dimensions
         void reset () { for (auto& i : L) i->reset(); }
+        inline const std::vector<Layer::Base*>& layers () { return L; }
 
         MX::Matrixf predict (const MX::Matrixf& X);
         MX::Matrixf predict (const std::vector<MX::Image>& X);
         std::vector<MX::Image> predict2D (const std::vector<MX::Image>& X);
+
+        inline void print () const { for (auto i : L) i->print(); }
+        void save (std::string file) const;
+        void load (std::string file);
+
+        friend std::ostream& operator<< (std::ostream& os, const Sequential& l);
+        friend std::istream& operator>> (std::istream& is, Sequential& l);
 
     };
 

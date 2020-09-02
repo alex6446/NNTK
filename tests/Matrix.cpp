@@ -1,6 +1,7 @@
 #include <NN/Matrix.hpp>
 #include <NN/Functions.hpp>
 #include <iostream>
+#include <fstream>
 
 using namespace NN;
 using namespace std;
@@ -139,6 +140,39 @@ void operators () {
     cout << "3 + A != (A += 3) " << (3 + A != (MX::Matrixi(A) += 3)) << endl;
 }
 
+void filewr () {
+    cout << endl << "### FILE WRITE READ TEST" << endl << endl; 
+    ofstream fout("tests/files/Matrix.mx");
+    MX::Matrixf A = MX::Matrixf(3, 6).randomize(0, 1);
+    fout << A;
+    fout.close();
+    cout << "Write " << A << endl;
+    ifstream fin("tests/files/Matrix.mx");
+    MX::Matrixf B;
+    if (fin.is_open())
+    fin >> B;
+    cout << "Read " << B << endl;
+}
+
+void filewrFilter() {
+    cout << endl << "### FILE WRITE READ FILTER TEST" << endl << endl; 
+    std::vector<MX::Image> A(2);
+    for (int i = 0; i < A.size(); ++i) {
+        A[i].push_back(MX::Matrixf(6, 6).randomize(0, 1));             
+        A[i].push_back(MX::Matrixf(6, 6).randomize(0, 1));             
+        A[i].push_back(MX::Matrixf(6, 6).randomize(0, 1));             
+    } 
+    ofstream fout("tests/files/Filter.mx");
+    fout << A;
+    fout.close();
+    cout << "Write " << A << endl;
+    std::vector<MX::Image> B;
+    ifstream fin("tests/files/Filter.mx");
+    if (fin.is_open())
+    fin >> B;
+    cout << "Read " << B << endl;
+}
+
 int main () {
 
     cout << endl << "START MATRIX TESTS ......................................." << endl << endl; 
@@ -148,6 +182,8 @@ int main () {
     accessors();
     operators();
     functions();
+    filewr();
+    filewrFilter();
 
     cout << endl << "FINISH MATRIX TESTS ......................................" << endl << endl;
 

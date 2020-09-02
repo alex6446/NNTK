@@ -23,6 +23,7 @@ namespace NN {
         {
             g = activation;
             this->bias = bias;
+            hp = hyperparameter;
             bound = false;
         }
 
@@ -122,6 +123,70 @@ namespace NN {
                 (Xdims[2] + 2*p - f) / s + 1 // A n
             };
             return Adims; 
+        }
+
+        void Conv2D::save (std::string file) const {
+            std::ofstream fout(file);
+            fout << *this;
+            fout.close();
+        }
+
+        void Conv2D::load (std::string file) {
+            std::ifstream fin(file);
+            fin >> *this;
+            fin.close();
+        }
+
+        std::ostream& operator<< (std::ostream& os, const Conv2D& l) {
+            os << "Layer Conv2D {" << std::endl;
+            os << "Xdims " << l.Xdims << std::endl;
+            os << "size " << l.size << std::endl;
+            os << "f " << l.f << std::endl;
+            os << "p " << l.p << std::endl;
+            os << "s " << l.s << std::endl;
+            std::string g = "None";
+            if (l.g == (float (*)(float, int, float))Activation::Sigmoid<float>) g = "Sigmoid";
+            if (l.g == (float (*)(float, int, float))Activation::ReLU<float>) g = "ReLU";
+            os << "g " << g << std::endl;
+            os << "bound " << l.bound << std::endl;
+            os << "rand_a " << l.rand_a << std::endl;
+            os << "rand_b " << l.rand_b << std::endl;
+            os << "hp " << l.hp << std::endl;
+            os << "bias " << l.bias << std::endl;
+            if (l.bias) os << "b " << l.b << std::endl;
+            os << "W " << l.W << std::endl;
+            os << "}" << std::endl;
+            return os;
+        }
+
+        std::istream& operator>> (std::istream& is, Conv2D& l) {
+            std::string buffer;
+            is >> buffer; // Layer
+            is >> buffer; // Conv2D
+            is >> buffer; // {
+            while (buffer != "}") {
+                is >> buffer;
+                if (buffer == "Xdims") is >> l.Xdims;
+                else if (buffer == "size") is >> l.size;
+                else if (buffer == "f") is >> l.f;
+                else if (buffer == "p") is >> l.p;
+                else if (buffer == "s") is >> l.s;
+                else if (buffer == "g") {
+                    is >> buffer;
+                    if (buffer == "None") l.g = Activation::None;
+                    else if (buffer == "Sigmoid") l.g = Activation::Sigmoid;
+                    else if (buffer == "ReLU") l.g = Activation::ReLU;
+                }
+                else if (buffer == "bound") is >> l.bound;
+                else if (buffer == "rand_a") is >> l.rand_a;
+                else if (buffer == "rand_b") is >> l.rand_b;
+                else if (buffer == "hp") is >> l.hp;
+                else if (buffer == "bias") is >> l.bias;
+                else if (buffer == "b") is >> l.b;
+                else if (buffer == "W") is >> l.W;
+            }
+            if (l.bias && !l.b.rows() || l.W.size()) l.bound = false;
+            return is;
         }
 
     } // namespace Layer

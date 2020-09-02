@@ -130,4 +130,49 @@ namespace NN {
         return *((std::vector<MX::Image>*)(L[L.size()-1]->getA()));
     }
 
+    void Sequential::save (std::string file) const {
+        std::ofstream fout(file);
+        fout << *this;
+        fout.close();
+    }
+
+    void Sequential::load (std::string file) {
+        std::ifstream fin(file);
+        fin >> *this;
+        fin.close();
+    }
+
+    std::ostream& operator<< (std::ostream& os, const Sequential& m) {
+        os << "Model Sequential {" << std::endl;
+        for (auto l : m.L)
+            l->output(os);
+        os << "}" << std::endl;
+        return os;            
+    }
+
+    std::istream& operator>> (std::istream& is, Sequential& m) {
+        m.L.clear();
+        std::string buffer;
+        is >> buffer; // Model
+        is >> buffer; // Sequential
+        is >> buffer; // {
+        int pos;
+        while (buffer != "}") {
+            pos = is.tellg();
+            is >> buffer;
+            if (buffer == "Layer") {
+                is >> buffer;
+                is.seekg(pos);
+                if (buffer == "Dense") m.L.push_back(new Layer::Dense);
+                else if (buffer == "Conv2D") m.L.push_back(new Layer::Conv2D);
+                else if (buffer == "AveragePooling2D") m.L.push_back(new Layer::AveragePooling2D);
+                else if (buffer == "MaxPooling2D") m.L.push_back(new Layer::MaxPooling2D);
+                else if (buffer == "Flatten") m.L.push_back(new Layer::Flatten);
+                m.L.back()->input(is);
+            }
+        }
+        return is;
+    }
+
+
 }

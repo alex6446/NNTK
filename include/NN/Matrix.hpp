@@ -4,6 +4,8 @@
 #include <random>
 #include <initializer_list>
 #include <vector>
+#include <string>
+#include <sstream>
 
 #include "NN/Error.hpp"
 
@@ -16,6 +18,11 @@ namespace NN {
         class Matrix;
 
         template <class T>
+        std::ostream& operator<< (std::ostream& os, const Matrix<T>& A);
+        template <class T>
+        std::istream& operator>> (std::istream& is, Matrix<T>& A);
+
+        template <class T>
         Matrix<T> Dot (const Matrix<T>& A, const Matrix<T>& B);
         template <class T>
         T Sum (const Matrix<T>& A);
@@ -23,6 +30,11 @@ namespace NN {
         Matrix<T> Sum (const Matrix<T>& A, int axis);
         template <class T>
         Matrix<T> Convolve (const Matrix<T>& A, const Matrix<T>& kernel, int padding=0, int stride=0);
+        
+        template <class T>
+        std::ostream& operator<< (std::ostream& os, const std::vector<std::vector<Matrix<T>>>& A);
+        template <class T>
+        std::istream& operator>> (std::istream& is, std::vector<std::vector<Matrix<T>>>& A);
         
     }
 
@@ -118,25 +130,15 @@ namespace NN {
 
         public: // friends go here
 
+            friend std::ostream& operator<< <> (std::ostream& os, const Matrix& A);
+            friend std::istream& operator>> <> (std::istream& is, Matrix& A);
+            friend std::ostream& operator<< <> (std::ostream& os, const std::vector<std::vector<Matrix<T>>>& A);
+            friend std::istream& operator>> <> (std::istream& is, std::vector<std::vector<Matrix<T>>>& A);
+
             friend Matrix Dot <> (const Matrix& A, const Matrix& B);
             friend T Sum <> (const Matrix& A);
             friend Matrix Sum <> (const Matrix& A, int axis);
             friend Matrix Convolve <> (const Matrix& A, const Matrix& kernel, int padding, int stride);
-
-            friend std::ostream& operator<< (std::ostream& os, const Matrix& A) {
-                os << "{\n    { ";
-                for (int i = 0; i < A.m; ++i) {
-                    for (int j = 0; j < A.n; ++j) {
-                        os << A.arr[i][j];
-                        if (j != A.n-1) os << ",";
-                        os << " ";
-                    }
-                    if (i != A.m-1)
-                        os << "}, " << std::endl << "    { ";
-                }
-                os << "}\n}";
-                return os;
-            }
 
             friend Matrix operator+ (T a, const Matrix& B) {
                 if (!B.arr)
@@ -802,6 +804,69 @@ namespace NN {
     namespace MX {
 
         template <class T>
+        std::ostream& operator<< (std::ostream& os, const Matrix<T>& A) {
+            os << "{\n    { ";
+            for (int i = 0; i < A.m; ++i) {
+                for (int j = 0; j < A.n; ++j) {
+                    os << A.arr[i][j];
+                    if (j != A.n-1) os << ",";
+                    os << " ";
+                }
+                if (i != A.m-1)
+                    os << "}, " << std::endl << "    { ";
+            }
+            os << "}\n}";
+            return os;
+        }
+
+        template <class T>
+        std::istream& operator>> (std::istream& is, Matrix<T>& A) {
+            int braces = 1;
+            std::vector<std::vector<T>> t;
+            while (is.peek() != '{' && !is.eof()) is.ignore();
+            is.ignore();
+            while (braces > 0) {
+                if (is.peek() == EOF)
+                    throw Error::Matrix(":operator>>:1: stream is incomplete");
+                switch (is.peek()) {
+                    case '{':
+                        if (braces > 1)
+                            throw Error::Matrix(":operator>>:1: too many opening braces");
+                        t.push_back(std::vector<T>());
+                        ++braces;
+                    case '\t':
+                    case '\n':
+                    case ' ':
+                    case ',': 
+                        is.ignore(); break;
+                    case '}':
+                        --braces; 
+                        is.ignore(); break;
+                    default:
+                        if (braces != 2)
+                            throw Error::Matrix(":operator>>:1: brace is missing");
+                        if ((is.peek() < 48 || is.peek() > 57) && is.peek() != '-')
+                            throw Error::Matrix(":operator>>:1: unknown symbol");
+                        T number;
+                        is >> number;
+                        t.back().push_back(number);
+                }
+            }
+            if (A.arr) A.Delete();
+            A.m = t.size();
+            A.n = t[0].size();
+            A.Create();
+            for (int i = 0; i < A.m; ++i) {
+                if (t[i].size() != A.n)
+                    throw Error::Matrix(":operator>>:1: incorrect list dimensions");
+                for (int j = 0; j < A.n; ++j)
+                    A.arr[i][j] = t[i][j]; 
+            }
+
+            return is;
+        }
+
+        template <class T>
         Matrix<T> Dot (const Matrix<T>& A, const Matrix<T>& B) {
             if (!A.arr || !B.arr)
                 throw Error::Matrix(":Dot:1: matrix not initialized");
@@ -863,6 +928,62 @@ namespace NN {
                         for (int kj = 0; kj < kernel.n; ++kj)
                             C.arr[ci][cj] += kernel.arr[ki][kj] * A.get(ai+ki, aj+kj);
             return C;
+        }
+
+        template <class T>
+        std::ostream& operator<< (std::ostream& os, const std::vector<std::vector<Matrix<T>>>& A) {
+            os << "{\n{\n";
+            int Am = A.size();
+            int An = A[0].size();
+            for (int i = 0; i < Am; ++i) {
+                for (int j = 0; j < An; ++j) {
+                    os << A[i][j];
+                    if (j != An-1) os << ",";
+                    os << " ";
+                }
+                if (i != Am-1)
+                    os << "\n}, {\n";
+            }
+            os << "\n}\n}";
+            return os;
+        }
+
+        template <class T>
+        std::istream& operator>> (std::istream& is, std::vector<std::vector<Matrix<T>>>& A) {
+            int braces = 1;
+            A.clear();
+            while (is.peek() != '{' && !is.eof()) is.ignore();
+            is.ignore();
+            while (braces > 0) {
+                if (is.peek() == EOF)
+                    throw Error::Matrix(":operator>>:2: stream is incomplete");
+                switch (is.peek()) {
+                    case '{':
+                        if (braces > 2)
+                            throw Error::Matrix(":operator>>:2: too many opening braces");
+                        if (braces == 1) {
+                            A.push_back(std::vector<Matrix<T>>());
+                            is.ignore();
+                            ++braces;
+                        }
+                        if (braces == 2) {
+                            A.back().push_back(Matrix<T>());
+                            is >> A.back().back();
+                        }
+                        break;
+                    case '\t':
+                    case '\n':
+                    case ' ':
+                    case ',': 
+                        is.ignore(); break;
+                    case '}':
+                        --braces; 
+                        is.ignore(); break;
+                    default:
+                        throw Error::Matrix(":operator>>:2: unknown symbol");
+                }
+            }
+            return is;
         }
 
     } // namespace MX

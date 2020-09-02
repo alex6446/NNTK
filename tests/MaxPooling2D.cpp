@@ -76,5 +76,10 @@ int main () {
             cout << j;
     // cout << MX::Matrixi(9, 5).randomize(-6, 6) << endl;
     // cout << MX::Matrixi(9, 5).randomize(-6, 6) << endl;
+    mp.print();
+    mp.save("tests/files/MaxPooling2D.layer");
 
+    Layer::MaxPooling2D lff;
+    lff.load("tests/files/MaxPooling2D.layer");
+    lff.print();
 }
