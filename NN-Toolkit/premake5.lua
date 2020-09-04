@@ -3,8 +3,8 @@ project "NN-Toolkit-static-lib"
     location "../build"
 
     targetname ("nn-toolkit")
-    targetdir ("bin/")
-    objdir ("obj/")
+    targetdir ("../lib")
+    objdir ("../obj")
     
     includedirs { "include" }
     
@@ -22,8 +22,8 @@ project "NN-Toolkit-shared-lib"
     location "../build"
 
     targetname ("nn-toolkit")
-    targetdir ("bin/")
-    objdir ("obj/")
+    targetdir ("../lib")
+    objdir ("../obj")
     
     includedirs { "include" }
     

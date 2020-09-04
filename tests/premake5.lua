@@ -3,8 +3,8 @@ group "Tests"
     project "Functions-test"
         kind "ConsoleApp"
         location "../build"
-        targetdir ("bin/%{cfg.buildcfg}")
-        objdir ("obj/%{cfg.buildcfg}/%{prj.name}")
+        targetdir ("../bin/%{cfg.buildcfg}")
+        objdir ("../obj/%{cfg.buildcfg}/%{prj.name}")
         includedirs { "../NN-Toolkit/include" }
         files { "Functions.cpp" }
         links { "NN-Toolkit-static-lib" } 
@@ -12,8 +12,8 @@ group "Tests"
     project "ErrorHandling-test"
         kind "ConsoleApp"
         location "../build"
-        targetdir ("bin/%{cfg.buildcfg}")
-        objdir ("obj/%{cfg.buildcfg}/%{prj.name}")
+        targetdir ("../bin/%{cfg.buildcfg}")
+        objdir ("../obj/%{cfg.buildcfg}/%{prj.name}")
         includedirs { "../NN-Toolkit/include" }
         files { "ErrorHandling.cpp" }
         links { "NN-Toolkit-static-lib" } 
@@ -21,8 +21,8 @@ group "Tests"
     project "Matrix-test"
         kind "ConsoleApp"
         location "../build"
-        targetdir ("bin/%{cfg.buildcfg}")
-        objdir ("obj/%{cfg.buildcfg}/%{prj.name}")
+        targetdir ("../bin/%{cfg.buildcfg}")
+        objdir ("../obj/%{cfg.buildcfg}/%{prj.name}")
         includedirs { "../NN-Toolkit/include" }
         files { "Matrix.cpp" }
         links { "NN-Toolkit-static-lib" } 
@@ -30,8 +30,8 @@ group "Tests"
     project "Perceptron-test"
         kind "ConsoleApp"
         location "../build"
-        targetdir ("bin/%{cfg.buildcfg}")
-        objdir ("obj/%{cfg.buildcfg}/%{prj.name}")
+        targetdir ("../bin/%{cfg.buildcfg}")
+        objdir ("../obj/%{cfg.buildcfg}/%{prj.name}")
         includedirs { "../NN-Toolkit/include" }
         files { "Perceptron.cpp" }
         links { "NN-Toolkit-static-lib" } 
@@ -39,8 +39,8 @@ group "Tests"
     project "MultilayerPerceptron-test"
         kind "ConsoleApp"
         location "../build"
-        targetdir ("bin/%{cfg.buildcfg}")
-        objdir ("obj/%{cfg.buildcfg}/%{prj.name}")
+        targetdir ("../bin/%{cfg.buildcfg}")
+        objdir ("../obj/%{cfg.buildcfg}/%{prj.name}")
         includedirs { "../NN-Toolkit/include" }
         files { "MultilayerPerceptron.cpp" }
         links { "NN-Toolkit-static-lib" } 
@@ -48,8 +48,8 @@ group "Tests"
     project "Conv2D-test"
         kind "ConsoleApp"
         location "../build"
-        targetdir ("bin/%{cfg.buildcfg}")
-        objdir ("obj/%{cfg.buildcfg}/%{prj.name}")
+        targetdir ("../bin/%{cfg.buildcfg}")
+        objdir ("../obj/%{cfg.buildcfg}/%{prj.name}")
         includedirs { "../NN-Toolkit/include" }
         files { "Conv2D.cpp" }
         links { "NN-Toolkit-static-lib" } 
@@ -57,8 +57,8 @@ group "Tests"
     project "Flatten-test"
         kind "ConsoleApp"
         location "../build"
-        targetdir ("bin/%{cfg.buildcfg}")
-        objdir ("obj/%{cfg.buildcfg}/%{prj.name}")
+        targetdir ("../bin/%{cfg.buildcfg}")
+        objdir ("../obj/%{cfg.buildcfg}/%{prj.name}")
         includedirs { "../NN-Toolkit/include" }
         files { "Flatten.cpp" }
         links { "NN-Toolkit-static-lib" } 
@@ -66,8 +66,8 @@ group "Tests"
     project "MaxPooling2D-test"
         kind "ConsoleApp"
         location "../build"
-        targetdir ("bin/%{cfg.buildcfg}")
-        objdir ("obj/%{cfg.buildcfg}/%{prj.name}")
+        targetdir ("../bin/%{cfg.buildcfg}")
+        objdir ("../obj/%{cfg.buildcfg}/%{prj.name}")
         includedirs { "../NN-Toolkit/include" }
         files { "MaxPooling2D.cpp" }
         links { "NN-Toolkit-static-lib" }
@@ -75,8 +75,8 @@ group "Tests"
     project "AveragePooling2D-test"
         kind "ConsoleApp"
         location "../build"
-        targetdir ("bin/%{cfg.buildcfg}")
-        objdir ("obj/%{cfg.buildcfg}/%{prj.name}")
+        targetdir ("../bin/%{cfg.buildcfg}")
+        objdir ("../obj/%{cfg.buildcfg}/%{prj.name}")
         includedirs { "../NN-Toolkit/include" }
         files { "AveragePooling2D.cpp" }
         links { "NN-Toolkit-static-lib" }
@@ -84,8 +84,8 @@ group "Tests"
     project "CNN-test"
         kind "ConsoleApp"
         location "../build"
-        targetdir ("bin/%{cfg.buildcfg}")
-        objdir ("obj/%{cfg.buildcfg}/%{prj.name}")
+        targetdir ("../bin/%{cfg.buildcfg}")
+        objdir ("../obj/%{cfg.buildcfg}/%{prj.name}")
         includedirs { "../NN-Toolkit/include" }
         files { "CNN.cpp" }
         links { "NN-Toolkit-static-lib" } 
