@@ -9,8 +9,8 @@ void CNN () {
     std::vector<MX::Image> X(8);
                      
     MX::Matrixf Y = MX::Matrixf({
-        { 1, 0, 0, 1, 0, 1, 0, 1 },
-        { 0, 1, 1, 0, 1, 0, 1, 0 }
+        { 1, 0, 0, 1, 0, 1, 0, 1 }//,
+        //{ 0, 1, 1, 0, 1, 0, 1, 0 }
     });
 
     std::ifstream fin("tests/files/CNN_X.mx");
@@ -32,22 +32,22 @@ void CNN () {
     // model.add((new Layer::Flatten())->sActivation(Activation::ReLU)->sBias(true));
     // model.add((new Layer::Dense())->sNeurons(10));
     // model.add((new Layer::Dense())->sNeurons(2));
-    model.add((new Layer::Conv2D)->sFilterSize(3)->sFilters(32)->sRandFrom(-0.01f)->sRandTo(0.01f));
+    model.add((new Layer::Conv2D)->sFilterSize(3)->sFilters(32)->sRandFrom(-0.074f)->sRandTo(0.074f));
     model.add((new Layer::MaxPooling2D()));
     model.add((new Layer::Flatten()));
-    model.add((new Layer::Dense())->sNeurons(128)->sActivation(Activation::ReLU)->sRandFrom(-0.01f)->sRandTo(0.01f));
-    model.add((new Layer::Dense())->sNeurons(2)->sRandFrom(-0.01f)->sRandTo(0.01f));
-    model.build({3, 28, 28});
+    model.add((new Layer::Dense())->sNeurons(128)->sActivation(Activation::ReLU)->sRandFrom(-0.00001f)->sRandTo(0.00001f));
+    model.add((new Layer::Dense())->sNeurons(1)->sRandFrom(-0.015f)->sRandTo(0.015f));
+    model.build({ 3, 28, 28 });
     std::cout << model.predict(X) << std::endl;
     for (int i = 0; i < 200; i++) {
-        model.fit(X, Y, Loss::MSE, 2, 1);
+        model.fit(X, Y, Loss::BCE, 4, 1);
         std::cout << model.predict(X) << std::endl;
     }
-    model.fit(X, Y, Loss::MSE, 2, 2);
+    model.fit(X, Y, Loss::BCE, 2, 2);
     std::cout << model.predict(X) << std::endl;
     model.save("tests/files/CNN.model");
     model.reset();
-    model.fit(X, Y, Loss::MSE, 2, 2);
+    model.fit(X, Y, Loss::BCE, 2, 2);
     std::cout << model.predict(X) << std::endl;
 
     Sequential model2;

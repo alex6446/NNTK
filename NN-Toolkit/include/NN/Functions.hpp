@@ -37,6 +37,7 @@ namespace NN {
 
         // Assuming each column is a separate output layer
         const void* MSE (const MX::Matrixf& A, const MX::Matrixf& Y, int mode, float hp);
+        const void* BCE (const MX::Matrixf& A, const MX::Matrixf& Y, int mode, float hp);
         
     }
 
