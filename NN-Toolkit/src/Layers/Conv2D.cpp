@@ -11,8 +11,8 @@ namespace NN {
             int stride,
             float (*activation) (float, int, float),
             bool bias,
-            int rand_from,
-            int rand_to,
+            float rand_from,
+            float rand_to,
             float hyperparameter
         ) : size(filters),
             f(filter_size),
@@ -93,7 +93,10 @@ namespace NN {
 
         void Conv2D::bind (const std::vector<int>& dimensions) {
             if (bound) return;
-            W = std::vector<MX::Filter>(size, MX::Filter(dimensions[0], MX::Matrixf(f, f).randomize(rand_a, rand_b)));
+            W = std::vector<MX::Filter>(size, MX::Filter(dimensions[0], MX::Matrixf(f, f)));
+            for (int i = 0; i < W.size(); ++i)
+                for (int j = 0; j < W[0].size(); ++j)
+                    W[i][j].randomize(rand_a, rand_b);
             Xdims = dimensions;
             if (bias)
                 b = MX::Matrixf(size, 1).randomize(rand_a, rand_b);

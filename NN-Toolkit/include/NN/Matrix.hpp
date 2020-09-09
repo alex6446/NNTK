@@ -70,7 +70,7 @@ namespace NN {
 
             // Functions (affect current object)
             Matrix& fit (const Matrix& B);
-            Matrix& randomize (int a, int b);
+            Matrix& randomize (float a, float b);
 
             // Functions (create new object)
             Matrix flatten (int axis=0) const;
@@ -354,12 +354,13 @@ namespace NN {
         }
 
         template <class T>
-        Matrix<T>& Matrix<T>::randomize (int a, int b) {
+        Matrix<T>& Matrix<T>::randomize (float a, float b) {
             if (!arr)
                 throw Error::Matrix(":randomize:1: matrix not initialized");
+                float diff =  b - a;
             for (int i = 0; i < m; ++i)
                 for (int j = 0; j < n; ++j)
-                    arr[i][j] = (rand()%(b-a)) + a + (T)rand()/RAND_MAX;
+                    arr[i][j] = (T)((float)rand() / (float)RAND_MAX * diff + a);
             return *this;
         }
 

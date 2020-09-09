@@ -7,8 +7,8 @@ namespace NN {
         Flatten::Flatten (
             float (*activation) (float, int, float),
             bool bias,
-            int rand_from,
-            int rand_to,
+            float rand_from,
+            float rand_to,
             float hyperparameter
         ) : rand_a(rand_from), 
             rand_b(rand_to)

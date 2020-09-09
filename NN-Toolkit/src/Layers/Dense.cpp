@@ -8,8 +8,8 @@ namespace NN {
             int neurons,
             float (*activation) (float, int, float),
             bool bias,
-            int rand_from,
-            int rand_to,
+            float rand_from,
+            float rand_to,
             float hyperparameter
         ) : size(neurons),
             rand_a(rand_from), 

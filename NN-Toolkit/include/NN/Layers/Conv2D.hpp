@@ -29,8 +29,8 @@ namespace NN {
             int s; // stride
 
             // random initialization range
-            int rand_a;
-            int rand_b;
+            float rand_a;
+            float rand_b;
 
         public:
 
@@ -41,20 +41,20 @@ namespace NN {
                 int stride=1,
                 float (*activation) (float, int, float) = Activation::ReLU,
                 bool bias = true,
-                int rand_from = -1,
-                int rand_to = 1,
+                float rand_from = -1,
+                float rand_to = 1,
                 float hyperparameter = 1
             );
 
             inline Conv2D* sFilters (int size) { this->size = size; return this; }
             inline Conv2D* sFilterSize (int f) { this->f = f; return this; }
-            inline Conv2D* sPadding (bool p) { this->p = p; return this; }
-            inline Conv2D* sStride (bool s) { this->s = s; return this; }
+            inline Conv2D* sPadding (int p) { this->p = p; return this; }
+            inline Conv2D* sStride (int s) { this->s = s; return this; }
             inline Conv2D* sActivation (float (*g) (float, int, float)) { this->g = g; return this; }
             inline Conv2D* sBias (bool bias) { this->bias = bias; return this; }
-            inline Conv2D* sRandFrom (bool rand_a) { this->rand_a = rand_a; return this; }
-            inline Conv2D* sRandTo (bool rand_b) { this->rand_b = rand_b; return this; }
-            inline Conv2D* sHyperparameter (bool hp) { this->hp = hp; return this; }
+            inline Conv2D* sRandFrom (float rand_a) { this->rand_a = rand_a; return this; }
+            inline Conv2D* sRandTo (float rand_b) { this->rand_b = rand_b; return this; }
+            inline Conv2D* sHyperparameter (float hp) { this->hp = hp; return this; }
 
             void forwardProp (const void* X) override;
             void backProp (const void* gradient) override;
