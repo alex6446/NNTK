@@ -1,14 +1,38 @@
-workspace "NN-Toolkit"
-    architecture "x86_64"
-    configurations { "Debug", "Release" }
-        
+project "NN-Toolkit-static-lib"
+    kind "StaticLib"
+    location "build"
+
+    targetname ("nn-toolkit")
+    targetdir ("lib")
+    objdir ("obj")
+    
+    includedirs { "include" }
+    
+    files {
+        "src/**.cpp",
+        "src/**.hpp",
+        "include/**.hpp"
+    }
+    
     filter "configurations:Debug"
-        defines { "DEBUG" }
-        symbols "On"
+        targetsuffix ("-debug")
+        
+project "NN-Toolkit-shared-lib"
+    kind "SharedLib"
+    location "build"
 
-    filter "configurations:Release"
-        defines { "NDEBUG" }
-        optimize "On"
-
-include "NN-Toolkit"
-include "tests"
+    targetname ("nn-toolkit")
+    targetdir ("lib")
+    objdir ("obj")
+    
+    includedirs { "include" }
+    
+    files {
+        "src/**.cpp",
+        "src/**.hpp",
+        "include/**.hpp"
+    }
+    
+    filter "configurations:Debug"
+        targetsuffix ("-debug")
+   

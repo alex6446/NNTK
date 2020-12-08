@@ -1,3 +1,3 @@
 #!/bin/sh
-cd ..
-vendor/premake/bin/linux/premake5 gmake2 
+cd ../build
+../vendor/premake/bin/linux/premake5 gmake2 

@@ -5,7 +5,7 @@ group "Tests"
         location "../build"
         targetdir ("../bin/%{cfg.buildcfg}")
         objdir ("../obj/%{cfg.buildcfg}/%{prj.name}")
-        includedirs { "../NN-Toolkit/include" }
+        includedirs { "../include" }
         files { "Functions.cpp" }
         links { "NN-Toolkit-static-lib" } 
 
@@ -14,7 +14,7 @@ group "Tests"
         location "../build"
         targetdir ("../bin/%{cfg.buildcfg}")
         objdir ("../obj/%{cfg.buildcfg}/%{prj.name}")
-        includedirs { "../NN-Toolkit/include" }
+        includedirs { "../include" }
         files { "ErrorHandling.cpp" }
         links { "NN-Toolkit-static-lib" } 
 
@@ -23,7 +23,7 @@ group "Tests"
         location "../build"
         targetdir ("../bin/%{cfg.buildcfg}")
         objdir ("../obj/%{cfg.buildcfg}/%{prj.name}")
-        includedirs { "../NN-Toolkit/include" }
+        includedirs { "../include" }
         files { "Matrix.cpp" }
         links { "NN-Toolkit-static-lib" } 
 
@@ -32,7 +32,7 @@ group "Tests"
         location "../build"
         targetdir ("../bin/%{cfg.buildcfg}")
         objdir ("../obj/%{cfg.buildcfg}/%{prj.name}")
-        includedirs { "../NN-Toolkit/include" }
+        includedirs { "../include" }
         files { "Perceptron.cpp" }
         links { "NN-Toolkit-static-lib" } 
 
@@ -41,7 +41,7 @@ group "Tests"
         location "../build"
         targetdir ("../bin/%{cfg.buildcfg}")
         objdir ("../obj/%{cfg.buildcfg}/%{prj.name}")
-        includedirs { "../NN-Toolkit/include" }
+        includedirs { "../include" }
         files { "MultilayerPerceptron.cpp" }
         links { "NN-Toolkit-static-lib" } 
 
@@ -50,7 +50,7 @@ group "Tests"
         location "../build"
         targetdir ("../bin/%{cfg.buildcfg}")
         objdir ("../obj/%{cfg.buildcfg}/%{prj.name}")
-        includedirs { "../NN-Toolkit/include" }
+        includedirs { "../include" }
         files { "Conv2D.cpp" }
         links { "NN-Toolkit-static-lib" } 
 
@@ -59,7 +59,7 @@ group "Tests"
         location "../build"
         targetdir ("../bin/%{cfg.buildcfg}")
         objdir ("../obj/%{cfg.buildcfg}/%{prj.name}")
-        includedirs { "../NN-Toolkit/include" }
+        includedirs { "../include" }
         files { "Flatten.cpp" }
         links { "NN-Toolkit-static-lib" } 
 
@@ -68,7 +68,7 @@ group "Tests"
         location "../build"
         targetdir ("../bin/%{cfg.buildcfg}")
         objdir ("../obj/%{cfg.buildcfg}/%{prj.name}")
-        includedirs { "../NN-Toolkit/include" }
+        includedirs { "../include" }
         files { "MaxPooling2D.cpp" }
         links { "NN-Toolkit-static-lib" }
 
@@ -77,7 +77,7 @@ group "Tests"
         location "../build"
         targetdir ("../bin/%{cfg.buildcfg}")
         objdir ("../obj/%{cfg.buildcfg}/%{prj.name}")
-        includedirs { "../NN-Toolkit/include" }
+        includedirs { "../include" }
         files { "AveragePooling2D.cpp" }
         links { "NN-Toolkit-static-lib" }
 
@@ -86,7 +86,7 @@ group "Tests"
         location "../build"
         targetdir ("../bin/%{cfg.buildcfg}")
         objdir ("../obj/%{cfg.buildcfg}/%{prj.name}")
-        includedirs { "../NN-Toolkit/include" }
+        includedirs { "../include" }
         files { "CNN.cpp" }
         links { "NN-Toolkit-static-lib" } 
 
