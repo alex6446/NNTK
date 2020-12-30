@@ -18,13 +18,13 @@ group "Tests"
         files { "ErrorHandling.cpp" }
         links { "NN-Toolkit-static-lib" } 
 
-    project "Matrix-test"
+    project "Array-test"
         kind "ConsoleApp"
         location "../build"
         targetdir ("../bin/%{cfg.buildcfg}")
         objdir ("../obj/%{cfg.buildcfg}/%{prj.name}")
         includedirs { "../include" }
-        files { "Matrix.cpp" }
+        files { "Array.cpp" }
         links { "NN-Toolkit-static-lib" } 
 
     project "Perceptron-test"

@@ -14,9 +14,9 @@ namespace NN {
             Base(const std::string& type, const std::string& msg);
         };
 
-        class Matrix : public Base {
+        class Array : public Base {
         public:
-            Matrix(const std::string& msg);
+            Array(const std::string& msg);
         };
 
     }

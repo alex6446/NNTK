@@ -4,7 +4,7 @@
 #include <iostream>
 #include <fstream>
 
-#include "NN/Matrix.hpp"
+#include "NN/Array.hpp"
 
 #define FUNC_DEF(func) #func
 
@@ -16,8 +16,8 @@ namespace NN {
         protected:
 
             bool bias;
-            MX::Matrixf b; // bias vector
-            MX::Matrixf db;
+            MX::Array<float> b; // bias vector
+            MX::Array<float> db;
             
             float (*g) (float, int, float); // activation function
             float hp; // hyperparameter
