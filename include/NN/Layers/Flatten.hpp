@@ -1,67 +1,56 @@
 #pragma once
 
-#include "NN/Matrix.hpp"
-#include "NN/Error.hpp"
 #include "NN/Layers/Base.hpp"
-#include "NN/Functions.hpp"
 
-namespace NN {
+namespace NN
+{
+namespace Layer
+{
 
-    namespace Layer {
+    class Flatten : public Base
+    {
+    public:
 
-        class Flatten : public Base {
-        private:
+        Flatten ();
 
-            // neurons for the whole dataset
-            MX::Matrixf Z; 
-            MX::Matrixf A;
-            MX::Matrixf dZ;
+        Base * forwardprop(const MX::Array<nn_type> &input) override;
 
-            const std::vector<MX::Image>* X;
+        Base *
+        backprop(const MX::Array<nn_type> &gradient) override
+        { m_dnet = gradient; return this; }
 
-            // total number of neurons
-            int size;
+        Base *
+        update(float learning_rate) override
+        { return this; }
 
-            // random initialization range
-            float rand_a;
-            float rand_b;
+        Base * bind(const MX::Array<size_type> &shape) override;
 
-        public:
+        const MX::Array<nn_type> &
+        output() const override
+        { return m_output; }
 
-            Flatten (
-                float (*activation) (float, int, float) = Activation::None,
-                bool bias = false,
-                float rand_from = -1,
-                float rand_to = 1,
-                float hyperparameter = 1
-            );
+        MX::Array<nn_type> gradient() const override
+        { return MX::Array<nn_type>(m_dnet).reshape(m_input_shape); }
 
-            inline Flatten* sActivation (float (*g) (float, int, float)) { this->g = g; return this; }
-            inline Flatten* sBias (bool bias) { this->bias = bias; return this; }
-            inline Flatten* sRandFrom (float rand_a) { this->rand_a = rand_a; return this; }
-            inline Flatten* sRandTo (float rand_b) { this->rand_b = rand_b; return this; }
-            inline Flatten* sHyperparameter (float hp) { this->hp = hp; return this; }
+        MX::Array<size_type>
+        output_shape() const override
+        { return { m_input_shape(0), m_input_shape.size() / m_input_shape(0) }; }
 
-            void forwardProp (const void* X) override;
-            void backProp (const void* gradient) override;
-            void update (float learning_rate) override;
-            void bind (const std::vector<int>& dimensions) override;
+        const Base * save(std::string file) const override;
+        Base * load(std::string file) override;
 
-            inline const void* getA () const override { return &A; }
-            const void* getGradient () const override;
-            inline std::vector<int> getDimensions () const override { return { size }; }
+        friend std::ostream &operator<<(std::ostream &os, const Flatten &layer);
+        friend std::istream &operator>>(std::istream &is, Flatten &layer);
 
-            inline void print () const override { std::cout << *this; }
-            void save (std::string file) const override;
-            void load (std::string file) override;
-            inline void output (std::ostream& os) override { os << *this; }
-            inline void input (std::istream& is) override { is >> *this; }
+    private:
 
-            friend std::ostream& operator<< (std::ostream& os, const Flatten& l);
-            friend std::istream& operator>> (std::istream& is, Flatten& l);
+        MX::Array<nn_type> m_dnet;
+        MX::Array<nn_type> m_output;
 
-        };
+        MX::Array<size_type> m_input_shape;
 
-    } // namespace Layer
+    };
+
+} // namespace Layer
 
 } // namespace NN

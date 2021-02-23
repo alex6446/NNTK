@@ -1,117 +1,147 @@
-#include "NN/Layers/Dense.hpp"
+//#include "NN/Layers/Dense.hpp"
+#include "../../include/NN/Layers/Dense.hpp"
 
-namespace NN {
+#include <iostream>
+#include <ostream>
 
-    namespace Layer {
+namespace NN
+{
+namespace Layer
+{
 
-        Dense::Dense (
-            int neurons,
-            float (*activation) (float, int, float),
-            bool bias,
-            float rand_from,
-            float rand_to,
-            float hyperparameter
-        ) : size(neurons),
-            rand_a(rand_from), 
-            rand_b(rand_to)
-        {
-            g = activation;
-            this->bias = bias;
-            hp = hyperparameter;
-            bound = false;
-        }
+    Dense::
+    Dense(size_type neurons_count,
+          activation_function_type activation,
+          bool is_bias_enabled,
+          float rand_from,
+          float rand_to,
+          float hyperparam)
+    : m_neurons_count(neurons_count)
+    , m_rand_from(rand_from)
+    , m_rand_to(rand_to)
+    , m_is_bias_enabled(is_bias_enabled)
+    , m_activation(activation)
+    , m_hyperparam(hyperparam)
+    { m_is_bound = false; }
 
-        void Dense::forwardProp (const void* X) {
-            this->X = (MX::Matrixf*)X;
-            Z = MX::Dot(W, *(this->X));
-            if (bias) {
-                for (int i = 0; i < Z.rows(); ++i)
-                    for (int j = 0; j < Z.cols(); ++j)
-                        Z(i, j) += b(i, 0);
-            }
-            
-            if (g) A = Z.apply(g, 0, hp);
-            else A = Z;
-        }
+    Base *
+    Dense::
+    forwardprop(const MX::Array<nn_type> &input)
+    {
+        m_input = &input;
+        m_net = MX::Dot(input, m_weights);
+        if (m_is_bias_enabled)
+            m_net = MX::Sum(m_net, m_bias);
+        m_output = m_activation(m_net, Activation::Mode::Base, m_hyperparam);
+        return this;
+    }
 
-        void Dense::backProp (const void* gradient) {
-            dZ = *((MX::Matrixf*)gradient);
-            delete (MX::Matrixf*)gradient;
-            if (g) dZ *= Z.apply(g, 1, hp);
-            dW = MX::Dot(dZ, X->transpose()) / dZ.cols();
-            if (bias) db = MX::Sum(dZ, 1) / dZ.cols();
-        }
+    Base *
+    Dense::
+    backprop(const MX::Array<nn_type> &gradient)
+    {
+        m_dnet = gradient * m_activation(m_net, Activation::Mode::Derivative, m_hyperparam);
+        m_dweights = MX::Dot(MX::Transpose(*m_input), m_dnet) / m_dnet.shape(0);
+        if (m_is_bias_enabled)
+            m_dbias = MX::Sum(m_dnet, 0, false) / m_dnet.shape(0);
+        return this;
+    }
 
-        void Dense::update (float learning_rate) {
-            W -= learning_rate * dW;
-            if (bias)
-                b -= learning_rate * db;
-        }
+    Base *
+    Dense::
+    update(float learning_rate)
+    {
+        m_weights -= learning_rate * m_dweights;
+        if (m_is_bias_enabled)
+            m_bias -= learning_rate * m_dbias;
+        return this;
+    }
 
-        void Dense::bind (const std::vector<int>& dimensions) {
-            if (bound) return;
-            W = MX::Matrixf(size, dimensions[0]).randomize(rand_a, rand_b);
-            if (bias)
-                b = MX::Matrixf(size, 1).randomize(rand_a, rand_b);
-            bound = true;
-        }
+    Base *
+    Dense::
+    bind(const MX::Array<size_type> &shape)
+    {
+        if (m_is_bound)
+            return this;
+        m_weights = MX::Random<nn_type>({shape(1), m_neurons_count}, m_rand_from, m_rand_to);
+        m_input_shape = shape;
+        if (m_is_bias_enabled)
+            m_bias = MX::Random<nn_type>({m_neurons_count}, m_rand_from, m_rand_to);
+        m_is_bound = true;
+        //m_weights = {{ -0.56177, -0.576535, 0.40228 }};
+        //m_bias = {{ -0.807144 }};
+        return this;
+    }
 
-        void Dense::save (std::string file) const {
-            std::ofstream fout(file);
-            fout << *this;
-            fout.close();
-        }
+    const Base *
+    Dense::
+    save(std::string file) const
+    {
+        std::ofstream fout(file);
+        fout << *this;
+        fout.close();
+        return this;
+    }
 
-        void Dense::load (std::string file) {
-            std::ifstream fin(file);
-            fin >> *this;
-            fin.close();
-        }
+    Base *
+    Dense::
+    load(std::string file)
+    {
+        std::ifstream fin(file);
+        fin >> *this;
+        fin.close();
+        return this;
+    }
 
-        std::ostream& operator<< (std::ostream& os, const Dense& l) {
-            os << "Layer Dense {" << std::endl;
-            os << "size " << l.size << std::endl;
-            std::string g = "None";
-            if (l.g == (float (*)(float, int, float))Activation::Sigmoid<float>) g = "Sigmoid";
-            if (l.g == (float (*)(float, int, float))Activation::ReLU<float>) g = "ReLU";
-            os << "g " << g << std::endl;
-            os << "bound " << l.bound << std::endl;
-            os << "rand_a " << l.rand_a << std::endl;
-            os << "rand_b " << l.rand_b << std::endl;
-            os << "hp " << l.hp << std::endl;
-            os << "bias " << l.bias << std::endl;
-            if (l.bias) os << "b " << l.b << std::endl;
-            os << "W " << l.W << std::endl;
-            os << "}" << std::endl;
-            return os;
-        }
+    std::ostream &
+    operator<<(std::ostream &os, const Dense &layer) {
+        os << "Layer Dense {" << std::endl
+           << "neurons_count: " << layer.m_neurons_count << std::endl;
+        std::string activation = "none";
+        if (layer.m_activation == Activation::Sigmoid<nn_type>) activation = "Sigmoid";
+        if (layer.m_activation == Activation::ReLU<nn_type>) activation = "ReLU";
+        os << "activation: " << activation << std::endl
+           << "is_bound: " << layer.m_is_bound << std::endl
+           << "rand_from: " << layer.m_rand_from << std::endl
+           << "rand_to: " << layer.m_rand_to << std::endl
+           << "hyperparam: " << layer.m_hyperparam << std::endl
+           << "is_bias_enabled: " << layer.m_is_bias_enabled << std::endl
+           << "input_shape: " << layer.m_input_shape << std::endl
+           << "bias: " << layer.m_bias << std::endl
+           << "weights: " << layer.m_weights << std::endl
+           << "}" << std::endl;
+        return os;
+    }
 
-        std::istream& operator>> (std::istream& is, Dense& l) {
-            std::string buffer;
-            is >> buffer; // Layer
-            is >> buffer; // Dense
-            is >> buffer; // {
-            while (buffer != "}") {
+    std::istream &
+    operator>>(std::istream &is, Dense &layer) {
+        std::string buffer;
+        is >> buffer // Layer
+           >> buffer // Dense
+           >> buffer; // {
+        while (buffer != "}") {
+            is >> buffer;
+            if (buffer == "neurons_count:") is >> layer.m_neurons_count;
+            else if (buffer == "activation:") {
                 is >> buffer;
-                if (buffer == "size") is >> l.size;
-                else if (buffer == "g") {
-                    is >> buffer;
-                    if (buffer == "None") l.g = Activation::None;
-                    else if (buffer == "Sigmoid") l.g = Activation::Sigmoid;
-                    else if (buffer == "ReLU") l.g = Activation::ReLU;
-                }
-                else if (buffer == "bound") is >> l.bound;
-                else if (buffer == "rand_a") is >> l.rand_a;
-                else if (buffer == "rand_b") is >> l.rand_b;
-                else if (buffer == "hp") is >> l.hp;
-                else if (buffer == "bias") is >> l.bias;
-                else if (buffer == "b") is >> l.b;
-                else if (buffer == "W") is >> l.W;
+                if (buffer == "none") layer.m_activation = Activation::None;
+                else if (buffer == "sigmoid") layer.m_activation = Activation::Sigmoid;
+                else if (buffer == "relu") layer.m_activation = Activation::ReLU;
             }
-            if (l.bias && !l.b.rows() || l.W.rows()) l.bound = false;
-            return is;
+            else if (buffer == "is_bound:") is >> layer.m_is_bound;
+            else if (buffer == "rand_from:") is >> layer.m_rand_from;
+            else if (buffer == "rand_to:") is >> layer.m_rand_to;
+            else if (buffer == "hyperparam:") is >> layer.m_hyperparam;
+            else if (buffer == "m_is_bias_enabled:") is >> layer.m_is_bias_enabled;
+            //else if (buffer == "input_shape:") is >> layer.m_input_shape;
+            //else if (buffer == "bias:") is >> layer.m_bias;
+            //else if (buffer == "weights:") is >> layer.m_weights;
         }
+        if (layer.m_input_shape.size() == 0)
+            layer.m_is_bound = false;
+        return is;
+    }
 
-    } // namespace Layer
+} // namespace Layer
 
 } // namespace NN

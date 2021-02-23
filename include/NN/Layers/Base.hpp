@@ -4,87 +4,91 @@
 #include <iostream>
 #include <fstream>
 
-#include "NN/Array.hpp"
+//#include "NN/MX/Array.hpp"
+//#include "NN/Funcs.hpp"
+//#include "NN/Core.hpp"
+
+#include "../Core.hpp"
+#include "../Funcs.hpp"
+#include "../MX/Array.hpp"
 
 #define FUNC_DEF(func) #func
 
-namespace NN {
+namespace NN
+{
+namespace Layer
+{
 
-    namespace Layer {
+    class Base
+    {
+    protected:
 
-        class Base {
-        protected:
+        using size_type = typename MX::Array<nn_type>::size_type;
+        using activation_function_type = MX::Array<nn_type> (*)(const MX::Array<nn_type> &, Activation::Mode, float);
 
-            bool bias;
-            MX::Array<float> b; // bias vector
-            MX::Array<float> db;
-            
-            float (*g) (float, int, float); // activation function
-            float hp; // hyperparameter
+    public:
 
-            bool bound;
+        virtual ~Base() = default;
 
+        virtual Base * forwardprop(const MX::Array<nn_type> &input) = 0;
+        virtual Base * backprop(const MX::Array<nn_type> &gradient) = 0;
+
+        virtual Base *
+        forwardprop(const Base *layer)
+        { forwardprop(layer->output()); return this; }
+
+        virtual
+        Base *
+        backprop(const Base *layer)
+        { backprop(layer->gradient()); return this; }
+
+        virtual Base * update(float learning_rate) = 0;
+        virtual Base * bind(const MX::Array<size_type> &shape) = 0;
+
+        virtual
+        Base *
+        bind(const Base *layer)
+        { bind(layer->output_shape()); return this; }
+
+        virtual inline
+        Base *
+        reset()
+        { m_is_bound = false; return this; }
+
+        virtual const MX::Array<nn_type> & output() const = 0;
+        virtual MX::Array<nn_type> gradient() const = 0;
+        virtual MX::Array<size_type> output_shape() const = 0;
+
+        virtual const Base * save(std::string file) const = 0;
+        virtual Base * load(std::string file) = 0;
+
+    public:
+
+        // Since all Builder classes will be stored as Base::Builder,
+        // I'm expecting to get slicing of methods.
+        // However it shouldn't affect the result
+        class Builder
+        {
         public:
 
-            // obviously void* to Base* overload looks like crazy
-            // but as a research shows that should work in all cases
-            virtual void forwardProp (const void* X) = 0;
-            virtual void forwardProp (const Base* layer) { forwardProp(layer->getA()); }
-            virtual void backProp (const void* gradient) = 0;
-            virtual void backProp (const Base* layer) { backProp(layer->getGradient()); }
+            Builder() = default;
+            virtual ~Builder() = default;
 
-            virtual void update (float learning_rate) = 0;
-            virtual void bind (const std::vector<int>& dimensions) = 0;
-            virtual void bind (const Base* layer) { bind(layer->getDimensions()); }
-            virtual inline void reset () { bound = false; }
+            operator Base * () const
+            { return m_layer; }
 
-            virtual const void* getA () const = 0;
-            virtual const void* getGradient () const = 0;
-            virtual std::vector<int> getDimensions () const = 0;
+        protected:
 
-            virtual void print () const = 0;
-            virtual void save (std::string file) const = 0;
-            virtual void load (std::string file) = 0;
-            virtual void output (std::ostream& os) = 0;
-            virtual void input (std::istream& is) = 0;
+            Base *m_layer;
 
         };
 
-        template <class T>
-        std::ostream& operator<< (std::ostream& os, const std::vector<T>& A) {
-            os << "{ ";
-            for (int i = 0; i < A.size(); ++i)
-                os << A[i] << (i == A.size() - 1 ? " " : ", ");
-            os << "}";
-            return os;
-        }
+    protected:
 
-        template <class T>
-        std::istream& operator>> (std::istream& is, std::vector<T>& A) {
-            A.clear();
-            while (is.peek() != '{' && !is.eof()) is.ignore();
-            is.ignore();
-            while (is.peek() != '}') {
-                if (is.peek() == EOF)
-                    throw Error::Base(":vector:operator>>: closing brace is missing");
-                switch (is.peek()) {
-                    case '\t':
-                    case '\n':
-                    case ' ':
-                    case ',': 
-                        is.ignore(); break;
-                    default:
-                        if ((is.peek() < 48 || is.peek() > 57) && is.peek() != '.')
-                            throw Error::Base(":vector:operator>>: unknown symbol");
-                        T number;
-                        is >> number;
-                        A.push_back(number);
-                }
-            }
-            is.ignore();
-            return is;
-        }
+        bool m_is_bound;
 
-    } // namespace Layer
+    };
+
+} // namespace Layer
 
 } // namespace NN

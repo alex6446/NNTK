@@ -1,72 +1,121 @@
 #pragma once
 
-#include "NN/Matrix.hpp"
-#include "NN/Error.hpp"
-#include "NN/Layers/Base.hpp"
-#include "NN/Functions.hpp"
+//#include "NN/Layers/Base.hpp"
+#include "Base.hpp"
 
-namespace NN {
+namespace NN
+{
+namespace Layer
+{
 
-    namespace Layer {
+    class Dense : public Base
+    {
+    public:
 
-        class Dense : public Base {
-        private:
-            
-            MX::Matrixf W;
-            MX::Matrixf dW;
+        Dense(size_type neurons_count=1,
+              activation_function_type activation=Activation::Sigmoid,
+              bool is_bias_enabled=true,
+              float rand_from=-1,
+              float rand_to=1,
+              float hyperparam=1);
 
-            // neurons for the whole dataset
-            MX::Matrixf Z; 
-            MX::Matrixf A;
-            MX::Matrixf dZ;
+        Base * forwardprop(const MX::Array<nn_type> &input) override;
+        Base * backprop(const MX::Array<nn_type> &gradient) override;
+        Base * update(float learning_rate) override;
+        Base * bind(const MX::Array<size_type> &shape) override;
 
-            const MX::Matrixf* X;
+        const MX::Array<nn_type> &
+        output() const override
+        { return m_output; }
 
-            // number of neurons
-            int size;
+        MX::Array<nn_type>
+        gradient() const override
+        { return MX::Array<nn_type>(MX::Dot(m_dnet, MX::Transpose(m_weights))); }
 
-            // random initialization range
-            float rand_a;
-            float rand_b;
+        MX::Array<size_type>
+        output_shape() const override
+        { return { m_input_shape(1), m_neurons_count }; }
 
+        const Base * save(std::string file) const override;
+        Base * load(std::string file) override;
+
+        friend std::ostream &operator<<(std::ostream &os, const Dense &layer);
+        friend std::istream &operator>>(std::istream &is, Dense &layer);
+
+    public:
+
+        class Builder : public Base::Builder
+        {
         public:
 
-            Dense (
-                int neurons=1,
-                float (*activation) (float, int, float) = Activation::Sigmoid,
-                bool bias = true,
-                float rand_from = -1,
-                float rand_to = 1,
-                float hyperparameter = 1
-            );
+            Builder()
+            { m_layer = new Dense(); }
 
-            inline Dense* sNeurons (int size) { this->size = size; return this; }
-            inline Dense* sActivation (float (*g) (float, int, float)) { this->g = g; return this; }
-            inline Dense* sBias (bool bias) { this->bias = bias; return this; }
-            inline Dense* sRandFrom (float rand_a) { this->rand_a = rand_a; return this; }
-            inline Dense* sRandTo (float rand_b) { this->rand_b = rand_b; return this; }
-            inline Dense* sHyperparameter (float hp) { this->hp = hp; return this; }
+            Builder &
+            bias(bool bias)
+            {
+                ((Dense *)m_layer)->m_is_bias_enabled = bias;
+                return *this;
+            }
 
-            void forwardProp (const void* X) override;
-            void backProp (const void* gradient) override;
-            void update (float learning_rate) override;
-            void bind (const std::vector<int>& dimensions) override;
+            Builder &
+            activation(activation_function_type activation)
+            {
+                ((Dense *)m_layer)->m_activation = activation;
+                return *this;
+            }
 
-            inline const void* getA () const override { return &A; }
-            inline const void* getGradient () const override { return new MX::Matrixf(MX::Dot(W.transpose(), dZ)); }
-            inline std::vector<int> getDimensions () const override { return { size }; }
+            Builder &
+            hyperparam(float hyperparam)
+            {
+                ((Dense *)m_layer)->m_hyperparam = hyperparam;
+                return *this;
+            }
 
-            inline void print () const override { std::cout << *this; }
-            void save (std::string file) const override;
-            void load (std::string file) override;
-            inline void output (std::ostream& os) override { os << *this; }
-            inline void input (std::istream& is) override { is >> *this; }
+            Builder &
+            neurons(size_type neurons)
+            {
+                ((Dense *)m_layer)->m_neurons_count = neurons;
+                return *this;
+            }
 
-            friend std::ostream& operator<< (std::ostream& os, const Dense& l);
-            friend std::istream& operator>> (std::istream& is, Dense& l);
+            Builder &
+            rand_range(float from, float to)
+            {
+                ((Dense *)m_layer)->m_rand_from = from;
+                ((Dense *)m_layer)->m_rand_to = to;
+                return *this;
+            }
 
         };
 
-    } // namespace Layer
+    private:
+
+        MX::Array<nn_type> m_weights;
+        MX::Array<nn_type> m_dweights;
+
+        MX::Array<nn_type> m_net;
+        MX::Array<nn_type> m_dnet;
+        MX::Array<nn_type> m_output;
+
+        const MX::Array<nn_type> *m_input;
+        MX::Array<size_type> m_input_shape;
+
+        size_type m_neurons_count;
+
+        // random initialization range
+        float m_rand_from;
+        float m_rand_to;
+
+        bool m_is_bias_enabled;
+        MX::Array<nn_type> m_bias; // bias vector
+        MX::Array<nn_type> m_dbias; // bias derivative
+
+        activation_function_type m_activation; // activation function
+        float m_hyperparam; // hyperparameter
+
+    };
+
+} // namespace Layer
 
 } // namespace NN

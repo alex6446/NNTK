@@ -1,14 +1,2 @@
-# Binaries
-**/lib/
-**/bin/
-**/obj/
-
-# Makefiles
-**/**.make
-**/Makefile
-
-# Visual Studio (Code)
-**/.vscode
-
-# Project
-
+build
+.cache
