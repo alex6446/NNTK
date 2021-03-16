@@ -23,9 +23,6 @@ namespace internal
                 NN_RUNTIME_ERROR(!i, "array: division by zero") \
         } \
         name##_array_array_cuda(result.data(), array.data(), result.size()); \
-        name##_array_array_cuda(result.data(), array.data(), result.size()); \
-        name##_array_array_cuda(result.data(), array.data(), result.size()); \
-        name##_array_array_cuda(result.data(), array.data(), result.size()); \
     }
 
     MX_ARRAY_OPERATION_AA_GPU(add, 0)

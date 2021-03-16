@@ -77,33 +77,33 @@ creation_test()
 
     TESTING_SECTION("random")
     MX::Array<float> ind;
-    TEST_EXP((ind = MX::Random<float>({12}, -1.5, 1.5)))
+    TEST_EXP((ind = MX::Array<float>::random({12}, -1.5, 1.5)))
     TEST_EXP(ind.shape())
-    TEST_EXP(ind.dimensions())
+    TEST_EXP(ind.strides())
 
     TESTING_SECTION("sequence")
     MX::Array<float> seq;
-    TEST_EXP((seq = MX::Sequence<float>({15}, 3, -2)))
+    TEST_EXP((seq = MX::Array<float>::sequence({15}, 3, -2)))
     TEST_EXP(seq.shape())
-    TEST_EXP(seq.dimensions())
+    TEST_EXP(seq.strides())
 
     TESTING_SECTION("zeros")
     MX::Array<int> zs;
-    TEST_EXP((zs = MX::Full<int>({2, 2, 3}, 0)))
+    TEST_EXP((zs = MX::Array<int>::full({2, 2, 3}, 0)))
     TEST_EXP(zs.shape())
-    TEST_EXP(zs.dimensions())
+    TEST_EXP(zs.strides())
 
     TESTING_SECTION("ones")
     MX::Array<int> os;
-    TEST_EXP((os = MX::Full<int>({2, 3}, 1)))
+    TEST_EXP((os = MX::Array<int>::ones({2, 3})))
     TEST_EXP(os.shape())
-    TEST_EXP(os.dimensions())
+    TEST_EXP(os.strides())
 
     TESTING_SECTION("empty")
     MX::Array<int> mp;
-    TEST_EXP((mp = MX::Empty<int>(os.shape())))
+    TEST_EXP((mp = MX::Array<int>::empty(os.shape())))
     TEST_EXP(mp.shape())
-    TEST_EXP(mp.dimensions())
+    TEST_EXP(mp.strides())
 }
 
 void
@@ -118,11 +118,11 @@ dot_product_test()
     MX::Array<int> l;
     MX::Array<int> r;
 
-    TEST_EXP((l = MX::Random<int>({2, 3}, 0, 5)))
-    TEST_EXP((r = MX::Random<int>({3, 1}, 0, 5)))
-    TEST_EXP(MX::Dot(l, r));
-    TEST_EXP(MX::Dot(l, r).shape());
-    TEST_EXP(MX::Dot(l, r).dimensions());
+    TEST_EXP((l = MX::Array<int>::random({2, 3}, 0, 5)))
+    TEST_EXP((r = MX::Array<int>::random({3, 1}, 0, 5)))
+    TEST_EXP(MX::Array<int>::dot(l, r));
+    TEST_EXP(MX::Array<int>::dot(l, r).shape());
+    TEST_EXP(MX::Array<int>::dot(l, r).strides());
 }
 
 void
@@ -133,12 +133,12 @@ save_load_test()
     TESTING_SECTION("save load")
 
     MX::Array<float> a;
-    TEST_EXP((a = MX::Random<float>({3, 2, 3}, -2, 2)))
-    TEST_EXP(a[2][1].save_to_file("save_test." + MX::Array<float>::FileExt))
+    TEST_EXP((a = MX::Array<float>::random({3, 2, 3}, -2, 2)))
+    TEST_EXP(a[2][1].save_to_file("tmp/save_test." + MX::Array<float>::FileExt))
 
     MX::Array<float> b;
-    TEST_EXP((b = MX::Full<float>({3, 3}, 0)))
-    TEST_EXP(b[0].load_from_file("save_test." + MX::Array<float>::FileExt))
+    TEST_EXP((b = MX::Array<float>::full({3, 3}, 0)))
+    TEST_EXP(b[0].load_from_file("tmp/save_test." + MX::Array<float>::FileExt))
     TEST_EXP(b)
 }
 
@@ -152,11 +152,11 @@ save_load_pack_test()
     MX::Array<float> b;
     MX::Array<float> c;
 
-    TEST_EXP((a = MX::Random<float>({3, 2, 3}, -2, 2)))
-    TEST_EXP((b = MX::Random<float>({3}, -3, 1)))
-    TEST_EXP((c = MX::Random<float>({2, 6}, -3, 1)))
-    MX::SavePack<float>("save_test.mxp", {&a, &b, &c});
-    auto arrays = MX::LoadPack<float>("save_test.mxp");
+    TEST_EXP((a = MX::Array<float>::random({3, 2, 3}, -2, 2)))
+    TEST_EXP((b = MX::Array<float>::random({3}, -3, 1)))
+    TEST_EXP((c = MX::Array<float>::random({2, 6}, -3, 1)))
+    MX::Array<float>::save_pack("tmp/save_test.mxp", {&a, &b, &c});
+    auto arrays = MX::Array<float>::load_pack("tmp/save_test.mxp");
     std::cout << "loaded arrays  -->" << std::endl;
     for (auto i : arrays)
         std::cout << *i << std::endl;
@@ -182,7 +182,7 @@ conv_test()
         {1, 0, 2},
         {-1, 0, 3}
     };
-    TEST_EXP(MX::Convolve(E, F, 2, 3))
+    TEST_EXP(MX::Array<int>::convolve(E, F, 2, 3))
     /* Answer: {
         { 6, 9, 21, -1 },
         { 51, 106, 77, 3 },
@@ -198,11 +198,11 @@ sum_test()
     TESTING_SECTION("sum")
     MX::Array<int> s;
     TEST_EXP((s = {{{1,2,3}, {4,5,6}}, {{7,8,9}, {10,11,12}}}))
-    TEST_EXP(MX::Sum(s, 0))
-    TEST_EXP(MX::Sum(s, 1))
-    TEST_EXP(MX::Sum(s, 2))
-    TEST_EXP(MX::Sum(s))
-    TEST_EXP(MX::Sum(s, MX::Array<int>({{7,8,9}, {10,11,12}})))
+    TEST_EXP(MX::Array<int>::sum(s, 0))
+    TEST_EXP(MX::Array<int>::sum(s, 1))
+    TEST_EXP(MX::Array<int>::sum(s, 2))
+    TEST_EXP(MX::Array<int>::sum(s))
+    TEST_EXP(MX::Array<int>::sum(s, MX::Array<int>({{7,8,9}, {10,11,12}})))
 }
 
 void
@@ -212,11 +212,11 @@ access_test()
 
     TESTING_SECTION("value access")
     MX::Array<float> a;
-    TEST_EXP((a = MX::Random<float>({2, 2, 3})))
+    TEST_EXP((a = MX::Array<float>::random({2, 2, 3})))
 
     TEST_EXP(a(0, 1))
     TEST_EXP(a.shape())
-    TEST_EXP(a.dimensions())
+    TEST_EXP(a.strides())
 
     TESTING_SECTION("subarray access")
     TEST_EXP(a[0])
@@ -234,7 +234,7 @@ iterator_test()
 
     TESTING_SECTION("iterators")
     MX::Array<int> a;
-    TEST_EXP((a = MX::Random<int>({2, 2}, 0, 5)))
+    TEST_EXP((a = MX::Array<int>::random({2, 2}, 0, 5)))
     std::cout << "(i *= i)  -->  ";
      for (auto &i : a)
         std::cout << (i *= i) << " ";
@@ -271,8 +271,8 @@ transpose_test()
           {5, 5, 5, 9}}};
     TEST_EXP(a)
     TEST_EXP(a.shape())
-    TEST_EXP(MX::Transpose(a, {1, 2, 0}))
-    TEST_EXP(MX::Transpose(a))
+    TEST_EXP(MX::Array<int>::transpose(a, {1, 2, 0}))
+    TEST_EXP(MX::Array<int>::transpose(a))
 }
 
 int

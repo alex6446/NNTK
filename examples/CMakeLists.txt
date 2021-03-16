@@ -1,8 +1,8 @@
 project(NNTK-Examples LANGUAGES CXX CUDA)
 
 set(EXAMPLES_SRC
-    #${PROJECT_SOURCE_DIR}/main.cpp
-    ${PROJECT_SOURCE_DIR}/cuda.cpp
+    ${PROJECT_SOURCE_DIR}/main.cpp
+    #${PROJECT_SOURCE_DIR}/cuda.cpp
     ${CMAKE_SOURCE_DIR}/src/Core/Base.cpp
     ${CMAKE_SOURCE_DIR}/src/Core/GPU/CUDA/Memory.cpp
 )
