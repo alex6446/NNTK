@@ -1,3 +1,5 @@
+#pragma once
+
 #include <cstddef>
 
 namespace NN
@@ -19,5 +21,6 @@ namespace internal
         delete[] *pointer;
     }
 
-} // namespace NN
 } // namespace internal
+
+} // namespace NN

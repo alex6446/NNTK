@@ -12,8 +12,10 @@
 #include <memory>
 #include <vector>
 
-#include "NN/Core/Base.hpp"
+#include "NN/Core/Device.hpp"
+#include "NN/Core/Error.hpp"
 #include "NN/Core/CPU/Memory.hpp"
+
 #include "Iterator.hpp"
 #include "CPU/ArithmeticOperations.hpp"
 
@@ -105,6 +107,7 @@ public:
 
     Array & reshape(const Array<size_type> &shape);
     Array & transpose(const Array<depth_type> &order={}) { return *this = transpose(*this, order); }
+    Array & t() const { transpose(*this); }
 
     iterator begin() { return iterator(m_data); }
     iterator end() { return iterator(m_data + m_size); }
@@ -196,7 +199,7 @@ private:
     size_type *m_shape = nullptr;
     size_type *m_strides = nullptr;
 
-};
+}; // class Array
 
 } // namespace MX
 

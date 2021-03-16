@@ -1,3 +1,5 @@
+#pragma once
+
 #include <cstddef>
 
 namespace NN
@@ -5,8 +7,9 @@ namespace NN
 namespace internal
 {
 
-    void allocate_memory_cuda(void **pointer, size_t bytes);
-    void free_memory_cuda(void **pointer);
+void allocate_memory_cuda(void **pointer, size_t bytes);
+void free_memory_cuda(void **pointer);
+
+} // namespace internal
 
 } // namespace NN
-} // namespace internal
