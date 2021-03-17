@@ -1,7 +1,7 @@
 #pragma once
 
-#include "NN/Core/Types.hpp"
 #include "NN/Layers/Base.hpp"
+#include "NN/Functions/Activation.hpp"
 
 namespace NN
 {
@@ -13,7 +13,7 @@ class Dense : public Base
 public:
 
     Dense(size_type neurons_count=1,
-          activation_function_type activation=Activation::Sigmoid,
+          ActivationFunction *activation=Activation::Sigmoid,
           bool is_bias_enabled=true,
           float rand_from=-1,
           float rand_to=1,
@@ -24,8 +24,8 @@ public:
     Base * update(float learning_rate) override;
     Base * bind(const NDSize &shape) override;
 
-    const NDArray & output() const override { return m_output; } 
-    NDArray gradient() const override { return NDArray(NDArray::dot(m_dnet, m_weights.t())); } 
+    const NDArray & output() const override { return m_output; }
+    NDArray gradient() const override { return NDArray(NDArray::dot(m_dnet, m_weights.t())); }
     NDSize output_shape() const override { return { m_input_shape(1), m_neurons_count }; }
 
     const Base * save(std::string file) const override;
@@ -51,16 +51,9 @@ public:
         }
 
         Builder &
-        activation(activation_function_type activation)
+        activation(ActivationFunction *activation)
         {
             ((Dense *)m_layer)->m_activation = activation;
-            return *this;
-        }
-
-        Builder &
-        hyperparam(float hyperparam)
-        {
-            ((Dense *)m_layer)->m_hyperparam = hyperparam;
             return *this;
         }
 
@@ -102,8 +95,7 @@ private:
     NDArray m_bias;
     NDArray m_dbias;
 
-    activation_function_type m_activation;
-    float m_hyperparam;
+    ActivationFunction *m_activation;
 
 };
 

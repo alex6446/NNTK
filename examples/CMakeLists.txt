@@ -5,6 +5,8 @@ set(EXAMPLES_SRC
     #${PROJECT_SOURCE_DIR}/cuda.cpp
     ${CMAKE_SOURCE_DIR}/src/Core/Base.cpp
     ${CMAKE_SOURCE_DIR}/src/Core/GPU/CUDA/Memory.cpp
+    ${CMAKE_SOURCE_DIR}/src/Functions/Activation.cpp
+    ${CMAKE_SOURCE_DIR}/src/Functions/Loss.cpp
 )
 
 add_executable(nntk-examples ${EXAMPLES_SRC})

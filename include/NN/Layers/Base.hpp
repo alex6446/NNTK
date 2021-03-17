@@ -1,7 +1,6 @@
 #pragma once
 
 #include "NN/Core/Types.hpp"
-#include "NN/Functions/Funcs.hpp"
 
 namespace NN
 {
@@ -13,7 +12,6 @@ class Base
 protected:
 
     using size_type = typename NDSize::size_type;
-    using activation_function_type = NDArray (*)(const NDArray &, Activation::Mode, float);
 
 public:
 

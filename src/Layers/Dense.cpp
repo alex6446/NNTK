@@ -1,6 +1,4 @@
-//#include "NN/Layers/Dense.hpp"
-#include "../../include/NN/Layers/Dense.hpp"
-#include "NN/Core/Types.hpp"
+#include "NN/Layers/Dense.hpp"
 
 #include <iostream>
 #include <ostream>
@@ -12,7 +10,7 @@ namespace Layer
 
 Dense::
 Dense(size_type neurons_count,
-      activation_function_type activation,
+      ActivationFunction *activation,
       bool is_bias_enabled,
       float rand_from,
       float rand_to,
@@ -22,7 +20,6 @@ Dense(size_type neurons_count,
 , m_rand_to(rand_to)
 , m_is_bias_enabled(is_bias_enabled)
 , m_activation(activation)
-, m_hyperparam(hyperparam)
 { m_is_bound = false; }
 
 Base *
@@ -33,7 +30,7 @@ forwardprop(const NDArray &input)
     m_net = NDArray::dot(input, m_weights);
     if (m_is_bias_enabled)
         m_net = NDArray::sum(m_net, m_bias);
-    m_output = m_activation(m_net, Activation::Mode::Base, m_hyperparam);
+    m_output = m_activation->function(m_net);
     return this;
 }
 
@@ -41,7 +38,7 @@ Base *
 Dense::
 backprop(const NDArray &gradient)
 {
-    m_dnet = gradient * m_activation(m_net, Activation::Mode::Derivative, m_hyperparam);
+    m_dnet = gradient * m_activation->derivative(m_net, m_output);
     m_dweights = NDArray::dot(m_input->t(), m_dnet) / m_dnet.shape(0);
     if (m_is_bias_enabled)
         m_dbias = NDArray::sum(m_dnet, 0, false) / m_dnet.shape(0);
@@ -99,13 +96,12 @@ operator<<(std::ostream &os, const Dense &layer) {
     os << "Layer Dense {" << std::endl
        << "neurons_count: " << layer.m_neurons_count << std::endl;
     std::string activation = "none";
-    if (layer.m_activation == Activation::Sigmoid<nn_type>) activation = "Sigmoid";
-    if (layer.m_activation == Activation::ReLU<nn_type>) activation = "ReLU";
+    if (layer.m_activation == Activation::Sigmoid) activation = "Sigmoid";
+    if (layer.m_activation == Activation::ReLU) activation = "ReLU";
     os << "activation: " << activation << std::endl
        << "is_bound: " << layer.m_is_bound << std::endl
        << "rand_from: " << layer.m_rand_from << std::endl
        << "rand_to: " << layer.m_rand_to << std::endl
-       << "hyperparam: " << layer.m_hyperparam << std::endl
        << "is_bias_enabled: " << layer.m_is_bias_enabled << std::endl
        << "input_shape: " << layer.m_input_shape << std::endl
        << "bias: " << layer.m_bias << std::endl
@@ -132,7 +128,6 @@ operator>>(std::istream &is, Dense &layer) {
         else if (buffer == "is_bound:") is >> layer.m_is_bound;
         else if (buffer == "rand_from:") is >> layer.m_rand_from;
         else if (buffer == "rand_to:") is >> layer.m_rand_to;
-        else if (buffer == "hyperparam:") is >> layer.m_hyperparam;
         else if (buffer == "m_is_bias_enabled:") is >> layer.m_is_bias_enabled;
         //else if (buffer == "input_shape:") is >> layer.m_input_shape;
         //else if (buffer == "bias:") is >> layer.m_bias;
