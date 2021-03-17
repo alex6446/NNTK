@@ -48,23 +48,23 @@ public:
 public:
 
     static Array empty(const Array<size_type> &shape);
+    static Array full(const Array<size_type> &shape, value_type value);
+    static Array ones(const Array<size_type> &shape) { return full(shape, 1); }
+    static Array zeros(const Array<size_type> &shape) { return full(shape, 0); }
     static Array random(const Array<size_type> &shape, double from=0.0, double to=1.0);
     static Array sequence(const Array<size_type> &shape, double start=1.0, double step=1.0);
-    static Array full(const Array<size_type> &shape, value_type value);
-    static Array zeros(const Array<size_type> &shape) { return full(shape, 0); }
-    static Array ones(const Array<size_type> &shape) { return full(shape, 1); }
 
     static Array reshape(const Array &array, const Array<size_type> &shape) { return Array(array).reshape(shape); }
-    static Array dot(const Array &left, const Array &right);
-    static Array convolve(const Array &array, const Array &kernel, int padding, int stride);
-    static Array sum(const Array &array, int axes, bool keepdims=true);
-    static auto  sum(const Array &array) -> value_type;
-    static Array sum(const Array &left, const Array &right);
     static Array transpose(const Array &array, const Array<depth_type> &order={});
-    static void  save_pack(std::ofstream &file, const std::vector<const Array *> &arrays);
-    static void  save_pack(std::string filepath, const std::vector<const Array *> &arrays);
+    static Array convolve(const Array &array, const Array &kernel, int padding, int stride);
+    static Array dot(const Array &left, const Array &right);
+    static Array sum(const Array &array, int axes, bool keepdims=true);
+    static Array sum(const Array &left, const Array &right);
+    static auto  sum(const Array &array) -> value_type;
     static auto  load_pack(std::ifstream &file) -> std::vector<std::shared_ptr<Array>>;
     static auto  load_pack(std::string filepath) -> std::vector<std::shared_ptr<Array>>;
+    static void  save_pack(std::ofstream &file, const std::vector<const Array *> &arrays);
+    static void  save_pack(std::string filepath, const std::vector<const Array *> &arrays);
     
 public:
 
@@ -89,13 +89,13 @@ public:
     template<class ...Types> auto force_get(Types... indices) const -> value_type;
     template<class ...Types> Array & force_add(T value, Types... indices);
 
+    auto data() -> value_type * { return m_data; }
+    auto data() const -> const value_type * { return m_data; }
     auto size() const -> const size_type & { return m_size; }
     auto depth() const -> const depth_type & { return m_depth; }
-    auto data() const -> const value_type * { return m_data; }
-    auto data() -> value_type * { return m_data; }
 
-    auto data(size_type index) const -> const value_type & { assert(index >= 0 && index < m_size); return m_data[index]; }
     auto data(size_type index) -> value_type & { assert(index >= 0 && index < m_size); return m_data[index]; }
+    auto data(size_type index) const -> const value_type & { assert(index >= 0 && index < m_size); return m_data[index]; }
     auto shape(depth_type index) const -> size_type { assert(index >= 0 && index < m_depth); return m_shape[index]; }
     auto strides(depth_type index) const -> size_type { assert(index >= 0 && index < m_depth); return m_strides[index]; }
 
@@ -107,7 +107,7 @@ public:
 
     Array & reshape(const Array<size_type> &shape);
     Array & transpose(const Array<depth_type> &order={}) { return *this = transpose(*this, order); }
-    Array & t() const { transpose(*this); }
+    Array & t() const { return transpose(*this); }
 
     iterator begin() { return iterator(m_data); }
     iterator end() { return iterator(m_data + m_size); }
