@@ -1,7 +1,7 @@
 #include "catch2/catch.hpp"
 
 //#define NN_GPU_ENABLED
-#include "NN/MX/Array.hpp"
+#include "NNTK/MX/Array.hpp"
 
 using namespace NN;
 

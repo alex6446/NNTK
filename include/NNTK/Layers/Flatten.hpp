@@ -1,6 +1,6 @@
 #pragma once
 
-#include "NN/Layers/Base.hpp"
+#include "NNTK/Layers/Base.hpp"
 
 namespace NN
 {

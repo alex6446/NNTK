@@ -1,6 +1,6 @@
 #pragma once
 
-#include "NN/Core/Types.hpp"
+#include "NNTK/Core/Types.hpp"
 
 namespace NN
 {

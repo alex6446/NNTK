@@ -1,4 +1,4 @@
-#include "NN/Layers/AveragePooling2D.hpp"
+#include "NNTK/Layers/AveragePooling2D.hpp"
 
 namespace NN
 {

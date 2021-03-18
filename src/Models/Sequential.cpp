@@ -1,4 +1,4 @@
-#include "NN/Models/Sequential.hpp"
+#include "NNTK/Models/Sequential.hpp"
 
 namespace NN
 {

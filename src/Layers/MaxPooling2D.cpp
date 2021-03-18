@@ -1,4 +1,4 @@
-#include "NN/Layers/MaxPooling2D.hpp"
+#include "NNTK/Layers/MaxPooling2D.hpp"
 
 namespace NN
 {

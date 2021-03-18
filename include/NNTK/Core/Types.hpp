@@ -1,6 +1,6 @@
 #pragma once
 
-#include "NN/MX/Array.hpp"
+#include "NNTK/MX/Array.hpp"
 
 namespace NN
 {

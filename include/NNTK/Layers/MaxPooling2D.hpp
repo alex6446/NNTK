@@ -1,16 +1,16 @@
 #pragma once
 
-#include "NN/Matrix.hpp"
-#include "NN/Error.hpp"
-#include "NN/Layers/Base.hpp"
-#include "NN/Functions.hpp"
+#include "NNTK/Matrix.hpp"
+#include "NNTK/Error.hpp"
+#include "NNTK/Layers/Base.hpp"
+#include "NNTK/Functions.hpp"
 
 namespace NN
 {
 namespace Layer
 {
 
-class AveragePooling2D : public Base {
+class MaxPooling2D : public Base {
 private:
 
     // volumes for the whole dataset
@@ -31,7 +31,7 @@ private:
 
 public:
 
-    AveragePooling2D (
+    MaxPooling2D (
         int pool_size=2,
         int padding=0,
         int stride=2,
@@ -42,14 +42,14 @@ public:
         float hyperparameter = 1
     );
 
-    inline AveragePooling2D* sPoolSize (int f) { this->f = f; return this; }
-    inline AveragePooling2D* sPadding (int p) { this->p = p; return this; }
-    inline AveragePooling2D* sStride (int s) { this->s = s; return this; }
-    inline AveragePooling2D* sActivation (float (*g) (float, int, float)) { this->g = g; return this; }
-    inline AveragePooling2D* sBias (bool bias) { this->bias = bias; return this; }
-    inline AveragePooling2D* sRandFrom (float rand_a) { this->rand_a = rand_a; return this; }
-    inline AveragePooling2D* sRandTo (float rand_b) { this->rand_b = rand_b; return this; }
-    inline AveragePooling2D* sHyperparameter (float hp) { this->hp = hp; return this; }
+    inline MaxPooling2D* sPoolSize (int f) { this->f = f; return this; }
+    inline MaxPooling2D* sPadding (int p) { this->p = p; return this; }
+    inline MaxPooling2D* sStride (int s) { this->s = s; return this; }
+    inline MaxPooling2D* sActivation (float (*g) (float, int, float)) { this->g = g; return this; }
+    inline MaxPooling2D* sBias (bool bias) { this->bias = bias; return this; }
+    inline MaxPooling2D* sRandFrom (float rand_a) { this->rand_a = rand_a; return this; }
+    inline MaxPooling2D* sRandTo (float rand_b) { this->rand_b = rand_b; return this; }
+    inline MaxPooling2D* sHyperparameter (float hp) { this->hp = hp; return this; }
 
     void forwardProp (const void* X) override;
     void backProp (const void* gradient) override;
@@ -66,8 +66,8 @@ public:
     inline void output (std::ostream& os) override { os << *this; }
     inline void input (std::istream& is) override { is >> *this; }
 
-    friend std::ostream& operator<< (std::ostream& os, const AveragePooling2D& l);
-    friend std::istream& operator>> (std::istream& is, AveragePooling2D& l);
+    friend std::ostream& operator<< (std::ostream& os, const MaxPooling2D& l);
+    friend std::istream& operator>> (std::istream& is, MaxPooling2D& l);
 
 };
 

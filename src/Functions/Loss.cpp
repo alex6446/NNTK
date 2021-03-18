@@ -1,8 +1,8 @@
-#include "NN/Functions/Loss.hpp"
+#include "NNTK/Functions/Loss.hpp"
 
 #include <cmath>
 
-#include "NN/Core/Types.hpp"
+#include "NNTK/Core/Types.hpp"
 
 namespace NN
 {

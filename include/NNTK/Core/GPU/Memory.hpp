@@ -1,8 +1,9 @@
 #pragma once
 
-#include "CUDA/Memory.hpp"
 #include <iostream>
 #include <ostream>
+
+#include "CUDA/Memory.hpp"
 
 namespace NN
 {

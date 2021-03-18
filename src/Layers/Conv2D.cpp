@@ -1,4 +1,4 @@
-#include "NN/Layers/Conv2D.hpp"
+#include "NNTK/Layers/Conv2D.hpp"
 
 #include <iterator>
 #include <ostream>

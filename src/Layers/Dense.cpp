@@ -1,4 +1,4 @@
-#include "NN/Layers/Dense.hpp"
+#include "NNTK/Layers/Dense.hpp"
 
 #include <iostream>
 #include <ostream>

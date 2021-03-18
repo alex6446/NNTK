@@ -1,6 +1,6 @@
 #pragma once
 
-#include "NN/Core/Error.hpp"
+#include "NNTK/Core/Error.hpp"
 
 namespace NN
 {

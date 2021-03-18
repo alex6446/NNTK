@@ -12,15 +12,15 @@
 #include <memory>
 #include <vector>
 
-#include "NN/Core/Device.hpp"
-#include "NN/Core/Error.hpp"
-#include "NN/Core/CPU/Memory.hpp"
+#include "NNTK/Core/Device.hpp"
+#include "NNTK/Core/Error.hpp"
+#include "NNTK/Core/CPU/Memory.hpp"
 
 #include "Iterator.hpp"
 #include "CPU/ArithmeticOperations.hpp"
 
 #ifdef NN_GPU_ENABLED
-#include "NN/Core/GPU/Memory.hpp"
+#include "NNTK/Core/GPU/Memory.hpp"
 #include "GPU/ArithmeticOperations.hpp"
 #endif
 

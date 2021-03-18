@@ -1,7 +1,7 @@
 #pragma once
 
-#include "NN/Layers/Base.hpp"
-#include "NN/Functions/Activation.hpp"
+#include "NNTK/Layers/Base.hpp"
+#include "NNTK/Functions/Activation.hpp"
 
 namespace NN
 {

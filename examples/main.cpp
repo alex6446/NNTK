@@ -1,4 +1,4 @@
-#include "NN/MX/Array.hpp"
+#include "NNTK/MX/Array.hpp"
 #include <ctime>
 #include <iostream>
 

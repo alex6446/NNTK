@@ -1,4 +1,4 @@
-#include "NN/Core/GPU/CUDA/Memory.hpp"
+#include "NNTK/Core/GPU/CUDA/Memory.hpp"
 
 namespace NN
 {

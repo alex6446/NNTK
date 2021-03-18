@@ -1,7 +1,7 @@
 #include <ostream>
 #define NN_GPU_ENABLED
 
-#include "NN/MX/Array.hpp"
+#include "NNTK/MX/Array.hpp"
 #include <iostream>
 
 void

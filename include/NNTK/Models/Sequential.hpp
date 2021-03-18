@@ -2,12 +2,12 @@
 
 #include <vector>
 
-#include "NN/Layers/Base.hpp"
-#include "NN/Layers/Dense.hpp"
-#include "NN/Layers/Conv2D.hpp"
-#include "NN/Layers/Flatten.hpp"
-#include "NN/Layers/MaxPooling2D.hpp"
-#include "NN/Layers/AveragePooling2D.hpp"
+#include "NNTK/Layers/Base.hpp"
+#include "NNTK/Layers/Dense.hpp"
+#include "NNTK/Layers/Conv2D.hpp"
+#include "NNTK/Layers/Flatten.hpp"
+#include "NNTK/Layers/MaxPooling2D.hpp"
+#include "NNTK/Layers/AveragePooling2D.hpp"
 
 namespace NN
 {

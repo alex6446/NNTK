@@ -3,7 +3,7 @@
 #include <cstddef>
 #include <iostream>
 
-#include "NN/Core/Base.hpp"
+#include "NNTK/Core/Error.hpp"
 
 #include "kernel/ArithmeticOperations.cu"
 

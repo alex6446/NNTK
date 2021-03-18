@@ -1,9 +1,9 @@
-#include "NN/Functions/Activation.hpp"
+#include "NNTK/Functions/Activation.hpp"
 
 #include <cmath>
 #include <algorithm>
 
-#include "NN/Core/Types.hpp"
+#include "NNTK/Core/Types.hpp"
 
 namespace NN
 {

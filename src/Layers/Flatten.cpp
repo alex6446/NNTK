@@ -1,4 +1,4 @@
-#include "NN/Layers/Flatten.hpp"
+#include "NNTK/Layers/Flatten.hpp"
 
 #include <ostream>
 
