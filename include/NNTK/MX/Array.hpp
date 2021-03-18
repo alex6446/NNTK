@@ -151,7 +151,7 @@ public:
 private:
 
     void allocate();
-    void clear();
+    void free();
 
     void allocate(const size_type *shape, depth_type depth);
 
@@ -222,7 +222,7 @@ allocate()
 template<typename T>
 void
 Array<T>::
-clear()
+free()
 {
     if (m_array_type == Type::Subarray)
         return;
@@ -392,7 +392,7 @@ template<typename T>
 Array<T>::
 ~Array()
 {
-    clear();
+    free();
 }
 
 template<typename T>
@@ -401,7 +401,7 @@ Array<T>::
 operator=(const Array &array)
 {
     if (m_array_type == Type::Array) {
-        clear();
+        free();
         m_size = array.m_size;
         m_depth = array.m_depth;
         allocate();
@@ -425,7 +425,7 @@ Array<T>::
 operator=(const std::initializer_list<T> &il)
 {
     if (m_array_type == Type::Array) {
-        clear();
+        free();
         m_size = il.size();
         m_depth = 1;
         allocate();
@@ -646,7 +646,7 @@ Array<T>::
 read(std::istream &stream)
 {
     if (m_array_type == Type::Array) {
-        clear();
+        free();
         stream.read((char *)&m_depth, sizeof(m_depth));
         size_type *s = new size_type[m_depth];
         for (size_type *i = s; i != s + m_depth; ++i)
