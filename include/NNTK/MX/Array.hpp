@@ -65,7 +65,7 @@ public:
     static auto  load_pack(std::string filepath) -> std::vector<std::shared_ptr<Array>>;
     static void  save_pack(std::ofstream &file, const std::vector<const Array *> &arrays);
     static void  save_pack(std::string filepath, const std::vector<const Array *> &arrays);
-    
+
 public:
 
     Array();
@@ -74,8 +74,9 @@ public:
     Array(const std::initializer_list<Array> &il);
     Array(const Array &copy);
     Array(Array &&move);
-    Array(value_type *subdata, size_type size, size_type *shape, size_type *strides, depth_type depth, Type array_type);
-    ~Array();
+    Array(value_type *subdata, size_type size, size_type *shape, size_type *strides, depth_type depth,
+          Type array_type, DeviceType device);
+    virtual ~Array();
 
     Array & operator=(const Array &array);
     Array & operator=(const std::initializer_list<value_type> &il);
@@ -148,7 +149,7 @@ public:
     Array & operator*=(value_type value);
     Array & operator/=(value_type value);
 
-private:
+protected:
 
     void allocate();
     void free();
@@ -180,7 +181,7 @@ public:
     MX_ARRAY_OPERATION_VA(*, 0)
     MX_ARRAY_OPERATION_VA(/, 1)
 
-private:
+protected:
 
     mutable std::shared_ptr<Array<size_type>> m_shape_subarray;
     mutable std::shared_ptr<Array<size_type>> m_strides_subarray;
@@ -188,9 +189,11 @@ private:
 
     Type m_array_type = Type::Array;
 
+public:
+
     DeviceType m_device = Device;
 
-private:
+protected:
 
     size_type m_size;
     value_type *m_data = nullptr;
@@ -350,13 +353,15 @@ Array(const std::initializer_list<Array> &il)
 
 template<typename T>
 Array<T>::
-Array(value_type *data, size_type size, size_type *shape, size_type *strides, depth_type depth, Type array_type)
+Array(value_type *data, size_type size, size_type *shape, size_type *strides, depth_type depth,
+        Type array_type, DeviceType device)
 : m_size(size)
 , m_data(data)
 , m_depth(depth)
 , m_shape(shape)
 , m_strides(strides)
 , m_array_type(array_type)
+, m_device(device)
 { }
 
 template<typename T>
@@ -364,6 +369,7 @@ Array<T>::
 Array(const Array &copy)
 : m_size(copy.m_size)
 , m_depth(copy.m_depth)
+, m_device(copy.m_device)
 {
     allocate();
     for (size_type i = 0; i < m_size; ++i)
@@ -382,6 +388,7 @@ Array(Array &&move)
 , m_depth(move.m_depth)
 , m_shape(move.m_shape)
 , m_strides(move.m_strides)
+, m_device(move.m_device)
 {
     move.m_shape = nullptr;
     move.m_strides = nullptr;
@@ -480,7 +487,8 @@ operator[](size_type index)
                 m_shape + 1,
                 m_strides + 1,
                 m_depth - 1,
-                Type::Subarray);
+                Type::Subarray,
+                m_device);
     return *m_data_subarray;
 }
 
@@ -560,7 +568,8 @@ shape() const -> const Array<size_type> &
                 m_shape, m_depth,
                 new size_type {m_depth},
                 new size_type {1}, 1,
-                Array<size_type>::Type::Shape);
+                Array<size_type>::Type::Shape,
+                DeviceType::CPU);
     return *m_shape_subarray;
 }
 
@@ -573,7 +582,8 @@ strides() const -> const Array<size_type> &
                 m_strides, m_depth,
                 new size_type {m_depth},
                 new size_type {1}, 1,
-                Array<size_type>::Type::Shape);
+                Array<size_type>::Type::Shape,
+                DeviceType::CPU);
     return *m_strides_subarray;
 }
 
