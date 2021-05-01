@@ -15,7 +15,6 @@ void
 allocate_memory_gpu(T **pointer, size_t size)
 {
     //*pointer = new T[size];
-    std::cout << sizeof(T) * size << std::endl;
     allocate_memory_cuda((void **)pointer, sizeof(T) * size);
 }
 

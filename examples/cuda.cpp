@@ -1,7 +1,9 @@
+#include "NNTK/Core/Device.hpp"
 #include <ostream>
 #define NN_GPU_ENABLED
 
 #include "NNTK/MX/Array.hpp"
+#include "NNTK/Core/Types.hpp"
 #include <iostream>
 
 void
