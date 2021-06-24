@@ -280,7 +280,8 @@ namespace NN::MX
         m_shape[0] = il.size();
         m_strides[0] = 1;
       } else {
-        assert(m_depth == 1 && m_shape[0] == il.size());
+        assert(m_depth == 1);
+        assert(m_shape[0] == il.size());
       }
       ::NN::internal::copy_memory_cpu(m_data, il.begin(),
                                       m_size * sizeof(value_type));
@@ -304,8 +305,8 @@ namespace NN::MX
           m_strides[i+1] = il.begin()->m_strides[i];
         }
       } else {
-        assert(m_depth == il.begin()->m_depth + 1 &&
-               std::equal(m_shape + 1, m_shape + 1 + m_depth,
+        assert(m_depth == il.begin()->m_depth + 1);
+        assert(std::equal(m_shape + 1, m_shape + 1 + m_depth,
                           il.begin()->m_shape));
       }
       for (size_type i = 0, c = 0; i < il.size(); ++i)
@@ -319,7 +320,9 @@ namespace NN::MX
     Array<T, D>::
     operator[](size_type index)
     {
-      assert(m_depth > 1 && index >= 0 && index < m_shape[0]);
+      assert(m_depth > 1);
+      assert(index >= 0);
+      assert(index < m_shape[0]);
       return *(m_data_subarray =
           std::make_shared<Array<value_type>>(
                                m_data + m_strides[0] * index,
@@ -336,7 +339,9 @@ namespace NN::MX
     Array<T, D>::
     operator[](size_type index) const
     {
-      assert(m_depth > 1 && index >= 0 && index < m_shape[0]);
+      assert(m_depth > 1);
+      assert(index >= 0);
+      assert(index < m_shape[0]);
       return *(m_data_subarray =
           std::make_shared<Array<value_type>>(
                                m_data + m_strides[0] * index,
@@ -528,8 +533,9 @@ namespace NN::MX
     Array<T, D>::                                                             \
     operator op (const Array<T, V>& array)                                    \
     {                                                                         \
-      assert(m_size == array.m_size && m_depth == array.m_depth &&            \
-             std::equal(m_shape, m_shape + m_depth, array.m_shape));          \
+      assert(m_size == array.m_size);                                         \
+      assert(m_depth == array.m_depth);                                       \
+      assert(std::equal(m_shape, m_shape + m_depth, array.m_shape));          \
       NN_GPU_FUNCTION_CALL((m_device == GPU && array.m_device == GPU),        \
                            internal::name##_array_array, (*this, array))      \
       return *this;                                                           \
@@ -573,7 +579,8 @@ namespace NN::MX
     Array<T, D>::
     dot(const Array& left, const Array& right)
     {
-      assert(left.depth() == 2 && right.depth() == 2);
+      assert(left.depth() == 2);
+      assert(right.depth() == 2);
       assert(left.shape(1) == right.shape(0));
       Array result = zeros({left.shape(0), right.shape(1)});
 
@@ -594,7 +601,9 @@ namespace NN::MX
     Array<T, D>::
     convolve(const Array& array, const Array& kernel, int padding, int stride)
     {
-      assert(array.depth() == 2 && kernel.depth() == 2 && stride >= 1);
+      assert(array.depth() == 2);
+      assert(kernel.depth() == 2);
+      assert(stride >= 1);
       size_type cm =
           (array.shape(0) + 2*padding - kernel.shape(0)) / stride + 1;
       size_type cn =
@@ -641,8 +650,10 @@ namespace NN::MX
     Array<T, D>::
     sum(const Array& left, const Array& right)
     {
-      assert(left.data() && right.data() && left.depth() >= right.depth() &&
-             left.size() % right.size() == 0);
+      assert(left.data());
+      assert(right.data());
+      assert(left.depth() >= right.depth());
+      assert(left.size() % right.size() == 0);
       Array s = left;
       for (size_type i = 0, index = 0; i < s.size(); ++i, ++index) {
         if (index >= right.size())

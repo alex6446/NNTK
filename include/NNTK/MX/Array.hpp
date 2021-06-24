@@ -247,14 +247,16 @@ namespace NN::MX
       value_type&
       data(size_type index)
       {
-        assert(index >= 0 && index < m_size);
+        assert(index >= 0);
+        assert(index < m_size);
         return m_data[index];
       }
 
       const value_type&
       data(size_type index) const
       {
-        assert(index >= 0 && index < m_size);
+        assert(index >= 0);
+        assert(index < m_size);
         return m_data[index];
       }
 
@@ -266,7 +268,8 @@ namespace NN::MX
       size_type
       shape(depth_type index) const
       {
-        assert(index >= 0 && index < m_depth);
+        assert(index >= 0);
+        assert(index < m_depth);
         return m_shape[index];
       }
 
@@ -278,7 +281,8 @@ namespace NN::MX
       size_type
       strides(depth_type index) const
       {
-        assert(index >= 0 && index < m_depth);
+        assert(index >= 0);
+        assert(index < m_depth);
         return m_strides[index];
       }
 
@@ -440,8 +444,9 @@ namespace NN::MX
         ArrayPrefCPU<T, D, V>
         operator-(Array<T, V>&& array) const &
         {
-          assert(m_size == array.m_size && m_depth == array.m_depth &&
-                 std::equal(m_shape, m_shape + m_depth, array.m_shape));
+          assert(m_size == array.m_size);
+          assert(m_depth == array.m_depth);
+          assert(std::equal(m_shape, m_shape + m_depth, array.m_shape));
           NN_GPU_FUNCTION_CALL((m_device == GPU && array.m_device == GPU),
                                internal::subtract_array_array_reverse,
                                (array, *this))
@@ -467,8 +472,9 @@ namespace NN::MX
         ArrayPrefCPU<T, D, V>
         operator/(Array<T, V>&& array) const &
         {
-          assert(m_size == array.m_size && m_depth == array.m_depth &&
-                 std::equal(m_shape, m_shape + m_depth, array.m_shape));
+          assert(m_size == array.m_size);
+          assert(m_depth == array.m_depth);
+          assert(std::equal(m_shape, m_shape + m_depth, array.m_shape));
           NN_GPU_FUNCTION_CALL((m_device == GPU && array.m_device == GPU),
                                internal::divide_array_array_reverse,
                                (array, *this))
