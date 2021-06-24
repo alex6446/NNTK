@@ -3,78 +3,101 @@
 #include "NNTK/Layers/Base.hpp"
 #include "NNTK/Functions/Activation.hpp"
 
-namespace NN
-{
-namespace Layer
+namespace NN::Layer
 {
 
-class Dense : public Base
-{
-public:
+  class Dense : public Base
+  {
+  public:
 
-    Dense(size_type neurons_count=1,
-          ActivationFunction *activation=Activation::Sigmoid,
-          bool is_bias_enabled=true,
-          float rand_from=-1,
-          float rand_to=1,
-          float hyperparam=1);
+    Dense(
+        size_type           neurons_count   = 1,
+        ActivationFunction *activation      = Activation::Sigmoid,
+        bool                is_bias_enabled = true,
+        float               rand_from       = -1,
+        float               rand_to         = 1,
+        float               hyperparam      = 1
+        );
 
-    Base * forwardprop(const NDArray &input) override;
-    Base * backprop(const NDArray &gradient) override;
-    Base * update(float learning_rate) override;
-    Base * bind(const NDSize &shape) override;
+    Base *
+    forwardprop(const NDArray &input) override;
 
-    const NDArray & output() const override { return m_output; }
-    NDArray gradient() const override { return NDArray(NDArray::dot(m_dnet, m_weights.t())); }
-    NDSize output_shape() const override { return { m_input_shape(1), m_neurons_count }; }
+    Base *
+    backprop(const NDArray &gradient) override;
 
-    const Base * save(std::string file) const override;
-    Base * load(std::string file) override;
+    Base *
+    update(float learning_rate) override;
 
-    friend std::ostream &operator<<(std::ostream &os, const Dense &layer);
-    friend std::istream &operator>>(std::istream &is, Dense &layer);
+    Base *
+    bind(const NDSize &shape) override;
 
-public:
+    const NDArray &
+    output() const override
+    { return m_output; }
+
+    NDArray
+    gradient() const override
+    { return NDArray(NDArray::dot(m_dnet, m_weights.t())); }
+
+    NDSize
+    output_shape() const override
+    { return { m_input_shape(1), m_neurons_count }; }
+
+
+    const Base *
+    save(std::string file) const override;
+
+    Base *
+    load(std::string file) override;
+
+
+    friend std::ostream &
+    operator<<(std::ostream &os, const Dense &layer);
+
+    friend std::istream &
+    operator>>(std::istream &is, Dense &layer);
+
+  public:
 
     class Builder : public Base::Builder
     {
     public:
 
-        Builder()
-        { m_layer = new Dense(); }
+      Builder()
+      { m_layer = new Dense(); }
 
-        Builder &
-        bias(bool bias)
-        {
-            ((Dense *)m_layer)->m_is_bias_enabled = bias;
-            return *this;
-        }
+      Builder &
+      bias(bool bias)
+      {
+          ((Dense *)m_layer)->m_is_bias_enabled = bias;
+          return *this;
+      }
 
-        Builder &
-        activation(ActivationFunction *activation)
-        {
-            ((Dense *)m_layer)->m_activation = activation;
-            return *this;
-        }
+      Builder &
+      activation(ActivationFunction *activation)
+      {
+          ((Dense *)m_layer)->m_activation = activation;
+          return *this;
+      }
 
-        Builder &
-        neurons(size_type neurons)
-        {
-            ((Dense *)m_layer)->m_neurons_count = neurons;
-            return *this;
-        }
+      Builder &
+      neurons(size_type neurons)
+      {
+          ((Dense *)m_layer)->m_neurons_count = neurons;
+          return *this;
+      }
 
-        Builder &
-        rand_range(float from, float to)
-        {
-            ((Dense *)m_layer)->m_rand_from = from;
-            ((Dense *)m_layer)->m_rand_to = to;
-            return *this;
-        }
+      Builder &
+      rand_range(float from, float to)
+      {
+          ((Dense *)m_layer)->m_rand_from = from;
+          ((Dense *)m_layer)->m_rand_to = to;
+          return *this;
+      }
 
-    };
+  };
 
-private:
+  private:
 
     NDArray m_weights;
     NDArray m_dweights;
@@ -97,8 +120,6 @@ private:
 
     ActivationFunction *m_activation;
 
-};
+  }; // class Dense
 
-} // namespace Layer
-
-} // namespace NN
+} // namespace NN::Layer

@@ -18,7 +18,7 @@
 namespace NN
 {
 
-enum class DeviceType { CPU, GPU };
+enum Device { CPU, GPU };
 extern bool NN_USE_GPU;
 
 } // namespace NN

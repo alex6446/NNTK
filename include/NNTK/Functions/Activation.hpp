@@ -5,9 +5,9 @@
 namespace NN
 {
 
-class ActivationFunction
-{
-public:
+  class ActivationFunction
+  {
+  public:
 
     virtual ~ActivationFunction() = default;
 
@@ -15,63 +15,92 @@ public:
     virtual NDArray derivative(const NDArray &x) const = 0;
     virtual NDArray derivative(const NDArray &x, const NDArray &y) const = 0;
 
-};
+  }; // class ActivationFunction
 
-class AFNone : public ActivationFunction
-{
-public:
+  class AFNone : public ActivationFunction
+  {
+  public:
 
-    NDArray function(const NDArray &x) const override { return x; }
-    NDArray derivative(const NDArray &x) const override { return NDArray::ones(x.shape()); }
-    NDArray derivative(const NDArray &x, const NDArray &y) const override { return derivative(x); };
+    NDArray
+    function(const NDArray &x) const override
+    { return x; }
 
-};
+    NDArray
+    derivative(const NDArray &x) const override
+    { return NDArray::ones(x.shape()); }
 
-class AFSigmoid : public ActivationFunction
-{
-public:
+    NDArray
+    derivative(const NDArray &x, const NDArray &y) const override
+    { return derivative(x); };
 
-    NDArray function(const NDArray &x) const override;
-    NDArray derivative(const NDArray &x) const override { return function(x) * (1. - function(x)); }
-    NDArray derivative(const NDArray &x, const NDArray &y) const override { return y * (1. - y); };
+  }; // class AFNone
 
-};
+  class AFSigmoid : public ActivationFunction
+  {
+  public:
 
-class AFReLU : public ActivationFunction
-{
-public:
+    NDArray
+    function(const NDArray &x) const override;
 
-    NDArray function(const NDArray &x) const override;
-    NDArray derivative(const NDArray &x) const override;
-    NDArray derivative(const NDArray &x, const NDArray &y) const override { return derivative(x); }
+    NDArray
+    derivative(const NDArray &x) const override
+    { return function(x) * (1. - function(x)); }
 
-};
+    NDArray
+    derivative(const NDArray &x, const NDArray &y) const override
+    { return y * (1. - y); };
 
-class AFLeakyReLU : public ActivationFunction
-{
-public:
+  }; // class AFSigmoid
 
-    AFLeakyReLU(nn_type alpha) : m_alpha(alpha) {}
+  class AFReLU : public ActivationFunction
+  {
+  public:
 
-    NDArray function(const NDArray &x) const override;
-    NDArray derivative(const NDArray &x) const override;
-    NDArray derivative(const NDArray &x, const NDArray &y) const override { return derivative(x); }
+    NDArray
+    function(const NDArray &x) const override;
 
-private:
+    NDArray
+    derivative(const NDArray &x) const override;
 
-    nn_type m_alpha;
+    NDArray
+    derivative(const NDArray &x, const NDArray &y) const override
+    { return derivative(x); }
 
-};
+  }; // class AFReLU
+
+  class AFLeakyReLU : public ActivationFunction
+  {
+  public:
+
+    AFLeakyReLU(nn_type alpha)
+      : m_alpha(alpha)
+    { }
+
+    NDArray
+    function(const NDArray &x) const override;
+
+    NDArray
+    derivative(const NDArray &x) const override;
+
+    NDArray
+    derivative(const NDArray &x, const NDArray &y) const override
+    { return derivative(x); }
+
+  private:
+
+      nn_type m_alpha;
+
+  }; // class AFLeakyReLU
 
 
-namespace Activation
-{
+  namespace Activation
+  {
 
-extern ActivationFunction *None;
-extern ActivationFunction *Sigmoid;
-extern ActivationFunction *ReLU;;
-ActivationFunction * LeakyReLU(nn_type alpha);
+    extern ActivationFunction *None;
+    extern ActivationFunction *Sigmoid;
+    extern ActivationFunction *ReLU;
+    ActivationFunction *LeakyReLU(nn_type alpha);
 
-} // namespace Activation
+  } // namespace Activation
 
 } // namespace NN

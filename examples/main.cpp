@@ -202,7 +202,7 @@ sum_test()
     TEST_EXP(MX::Array<int>::sum(s, 1))
     TEST_EXP(MX::Array<int>::sum(s, 2))
     TEST_EXP(MX::Array<int>::sum(s))
-    TEST_EXP(MX::Array<int>::sum(s, MX::Array<int>({{7,8,9}, {10,11,12}})))
+    //TEST_EXP(MX::Array<int>::sum(s, MX::Array<int>({{7,8,9}, {10,11,12}})))
 }
 
 void

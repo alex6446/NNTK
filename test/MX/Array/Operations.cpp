@@ -1,6 +1,6 @@
 #include "catch2/catch.hpp"
 
-//#define NN_GPU_ENABLED
+#define NN_GPU_ENABLED
 #include "NNTK/MX/Array.hpp"
 
 using namespace NN;
