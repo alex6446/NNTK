@@ -20,7 +20,7 @@ test_speed()
 
   std::cout << "START DOING STUFF" << std::endl;
   //auto c = a + b + b + b + b + b + b + b; // too much
-  auto c = a + b * 7; // too much
+  auto c = a - b * 7; // too much
 
   clock_t end = clock();
   double elapsed_secs = double(end - begin) / CLOCKS_PER_SEC;
@@ -36,7 +36,7 @@ test_speed()
 
   std::cout << "START DOING STUFF" << std::endl;
   //auto ct = at + bt + bt + bt + bt + bt + bt + bt; // too much
-  auto ct = at + bt * 7; // too much
+  auto ct = at - bt * 7; // too much
 
   end = clock();
   elapsed_secs = double(end - begin) / CLOCKS_PER_SEC;
@@ -70,7 +70,8 @@ test_accuracy()
   std::cout << d << " " << &d << " " << d.device() << std::endl;
   //std::cout << d << " " << d.device() << std::endl;
   std::cout << "START DOING STUFF\n" << std::endl;
-  auto e = a - 3 - b + c + d;
+  //auto e = a - 3 - b + c + d;
+  auto e = a - (b - 7); // too much
   std::cout << "\nEND DOING STUFF" << std::endl;
   e(0) = -3;
   std::cout << a << " " << a.device() << std::endl;
@@ -79,17 +80,6 @@ test_accuracy()
   std::cout << d << " " << d.device() << std::endl;
   std::cout << e << " " << e.device() << std::endl;
 
-  auto test = NN::MX::Array<int, NN::GPU>::sequence({10}, 3, 2);
-  auto test1 = NN::MX::Array<int, NN::GPU>::zeros({10});
-  auto test2 = NN::MX::Array<int, NN::GPU>::full({10}, 0);
-  auto test3 = NN::MX::Array<int, NN::GPU>::zeros({2, 3, 4});
-  auto test4 = NN::MX::Array<int, NN::GPU>::full({2, 3, 4}, 0);
-  std::cout << test << std::endl
-            << test1 << std::endl
-            << test2 << std::endl
-            << test3 << std::endl
-            << test4 << std::endl;
-
 }
 
 int
@@ -97,15 +87,6 @@ main()
 {
   std::vector<int> a;
 
-  auto b = NN::MX::Array<int>::random({2, 3, 4}, 0, 10);
-  b.print();
-  NN::MX::Array<int>::sum(b, 0).print();
-  NN::MX::Array<int>::sum(b, 0, false).print();
-  NN::MX::Array<int>::sum(b, 1).print();
-  NN::MX::Array<int>::sum(b, 1, false).print();
-  NN::MX::Array<int>::sum(b, 2).print();
-  NN::MX::Array<int>::sum(b, 2, false).print();
-
-  //test_speed();
+  test_speed();
   //test_accuracy();
 }

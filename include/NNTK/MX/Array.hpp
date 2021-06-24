@@ -438,6 +438,18 @@ namespace NN::MX
 
       template<Device V>
         ArrayPrefCPU<T, D, V>
+        operator-(Array<T, V>&& array) const &
+        {
+          assert(m_size == array.m_size && m_depth == array.m_depth &&
+                 std::equal(m_shape, m_shape + m_depth, array.m_shape));
+          NN_GPU_FUNCTION_CALL((m_device == GPU && array.m_device == GPU),
+                               internal::subtract_array_array_reverse,
+                               (array, *this))
+          return std::move(array);
+        }
+
+      template<Device V>
+        ArrayPrefCPU<T, D, V>
         operator-(const Array<T, V>& array) const &
         { return ArrayPrefCPU<T, D, V>(*this).operator-(array); }
 
@@ -450,6 +462,18 @@ namespace NN::MX
         ArrayPrefCPU<T, D, V>
         operator/(const Array<T, V>& array) &&
         { return std::move(operator/=(array)); }
+
+      template<Device V>
+        ArrayPrefCPU<T, D, V>
+        operator/(Array<T, V>&& array) const &
+        {
+          assert(m_size == array.m_size && m_depth == array.m_depth &&
+                 std::equal(m_shape, m_shape + m_depth, array.m_shape));
+          NN_GPU_FUNCTION_CALL((m_device == GPU && array.m_device == GPU),
+                               internal::divide_array_array_reverse,
+                               (array, *this))
+          return std::move(array);
+        }
 
       template<Device V>
         ArrayPrefCPU<T, D, V>

@@ -21,7 +21,6 @@
 #include "NNTK/Core/Memory.hpp"
 
 #include "../Array.hpp"
-#include "NNTK/MX/Array/Iterator.hpp"
 
 namespace NN::MX
 {
@@ -167,7 +166,7 @@ namespace NN::MX
     Array(const Array<T, D>& copy)
     : m_size(copy.m_size), m_depth(copy.m_depth), m_device(copy.m_device)
     {
-      //std::cout << D << " same copy" << std::endl;
+      std::cout << D << " same copy" << std::endl;
       allocate();
       ::NN::internal::copy_memory_cpu(m_shape, copy.m_shape,
                                       m_depth * sizeof(size_type));
@@ -182,7 +181,7 @@ namespace NN::MX
     Array(const Array<T, nD>& copy)
     : m_size(copy.m_size), m_depth(copy.m_depth), m_device(D)
     {
-      //std::cout << D << " diff copy" << std::endl;
+      std::cout << D << " diff copy" << std::endl;
       allocate();
       ::NN::internal::copy_memory_cpu(m_shape, copy.m_shape,
                                       m_depth * sizeof(size_type));
@@ -200,7 +199,7 @@ namespace NN::MX
       m_shape(move.m_shape), m_strides(move.m_strides),
       m_device(move.m_device)
     {
-      //std::cout << "same move " << D << std::endl;
+      std::cout << "same move " << D << std::endl;
       move.m_shape = nullptr;
       move.m_strides = nullptr;
       move.m_data = nullptr;
@@ -212,8 +211,8 @@ namespace NN::MX
     : m_size(move.m_size), m_data(move.m_data), m_depth(0),
       m_shape(move.m_shape), m_strides(move.m_strides), m_device(D)
     {
-      //std::cout << "diff move " << D << this
-                //<< " from " << nD << &move << std::endl;
+      std::cout << "diff move " << D << this
+                << " from " << nD << &move << std::endl;
       allocate();
       m_depth = move.m_depth;
       NN_GPU_FUNCTION_CALL(true, NN::internal::copy_memory,
@@ -537,8 +536,8 @@ namespace NN::MX
     }
 
   MX_ARRAY_ROPERATION_AA_EQ(+=, add)
-  MX_ARRAY_ROPERATION_AA_EQ(-=, subtract)
   MX_ARRAY_ROPERATION_AA_EQ(*=, multiply)
+  MX_ARRAY_ROPERATION_AA_EQ(-=, subtract)
   MX_ARRAY_ROPERATION_AA_EQ(/=, divide)
 
 #define MX_ARRAY_OPERATION_AV_EQ(op, mode, name)                              \
@@ -555,8 +554,8 @@ namespace NN::MX
     }
 
   MX_ARRAY_OPERATION_AV_EQ(+=, 0, add)
-  MX_ARRAY_OPERATION_AV_EQ(-=, 0, subtract)
   MX_ARRAY_OPERATION_AV_EQ(*=, 0, multiply)
+  MX_ARRAY_OPERATION_AV_EQ(-=, 0, subtract)
   MX_ARRAY_OPERATION_AV_EQ(/=, 1, divide)
 
   // static implementation
