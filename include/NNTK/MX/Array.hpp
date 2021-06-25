@@ -398,6 +398,12 @@ namespace NN::MX
         operator+(const Array<T, V>& array) &&
         { return std::move(operator+=(array)); }
 
+      /// rvalue + rvalue (works as rvalue += lvalue)
+      template<Device V>
+        ArrayPrefCPU<T, D, V>
+        operator+(Array<T, V>&& array) &&
+        { return std::move(operator+=(array)); }
+
       /// lvalue + rvalue (works as rvalue += lvalue)
       template<Device V>
         ArrayPrefCPU<T, D, V>
@@ -422,6 +428,11 @@ namespace NN::MX
 
       template<Device V>
         ArrayPrefCPU<T, D, V>
+        operator*(Array<T, V>&& array) &&
+        { return std::move(operator*=(array)); }
+
+      template<Device V>
+        ArrayPrefCPU<T, D, V>
         operator*(Array<T, V>&& array) const &
         { return std::move(array.operator*=(*this)); }
 
@@ -438,6 +449,11 @@ namespace NN::MX
       template<Device V>
         ArrayPrefCPU<T, D, V>
         operator-(const Array<T, V>& array) &&
+        { return std::move(operator-=(array)); }
+
+      template<Device V>
+        ArrayPrefCPU<T, D, V>
+        operator-(Array<T, V>&& array) &&
         { return std::move(operator-=(array)); }
 
       template<Device V>
@@ -466,6 +482,11 @@ namespace NN::MX
       template<Device V>
         ArrayPrefCPU<T, D, V>
         operator/(const Array<T, V>& array) &&
+        { return std::move(operator/=(array)); }
+
+      template<Device V>
+        ArrayPrefCPU<T, D, V>
+        operator/(Array<T, V>&& array) &&
         { return std::move(operator/=(array)); }
 
       template<Device V>
